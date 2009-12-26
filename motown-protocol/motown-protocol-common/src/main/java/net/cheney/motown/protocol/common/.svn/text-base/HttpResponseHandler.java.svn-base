@@ -1,0 +1,8 @@
+package net.cheney.motown.protocol.common;
+
+import net.cheney.motown.http.Response;
+
+public interface HttpResponseHandler {
+
+	void sendResponse(Response response, boolean close);
+}

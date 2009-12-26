@@ -1,0 +1,33 @@
+package net.cheney.motown.protocol.http.async;
+
+import java.io.IOException;
+
+import net.cheney.motown.http.Request;
+import net.cheney.motown.protocol.common.HttpRequestHandler;
+import net.cheney.reactor.AsyncSocketChannel;
+import net.cheney.reactor.ServerProtocolFactory;
+
+public class HttpServerProtocolFactory extends ServerProtocolFactory {
+	
+	private final HttpRequestHandler handler;
+
+	public HttpServerProtocolFactory(final HttpRequestHandler handler) {
+		this.handler = handler;
+	}
+
+	@Override
+	protected void doAccept(final AsyncSocketChannel channel) {
+		final HttpProtocol<Request> protocol = new HttpServerProtocol(channel, handler);
+		try {
+			protocol.onConnect();
+		} catch (IOException e) {
+			e.printStackTrace();
+			try {
+				channel.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+}

@@ -1,0 +1,67 @@
+package net.cheney.motown.protocol.http.async;
+
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.util.Collection;
+import java.util.Map.Entry;
+
+import org.apache.commons.lang.StringUtils;
+
+import net.cheney.motown.http.Message;
+import net.cheney.motown.http.Request;
+import net.cheney.motown.http.Response;
+import net.cheney.motown.protocol.http.common.ResponseParser;
+import net.cheney.reactor.AsyncSocketChannel;
+
+public class HttpClientProtocol extends HttpProtocol<Response> {
+
+	private Request request;
+
+	protected HttpClientProtocol(final AsyncSocketChannel channel, final Request request) {
+		super(channel, new ResponseParser());
+		this.request = request;
+	}
+	
+	@Override
+	public void onConnect() {
+		sendRequest(request, false);
+	}
+
+	private void sendRequest(Request request, boolean requestClose) {
+		ByteBuffer header = buildHeaderBuffer(request, requestClose);
+		ByteBuffer body = request.body();
+		if(body == null) {
+			write(header, requestClose);
+		} else {
+			write(new ByteBuffer[] { header, body }, requestClose);
+		}
+		reset();
+		readRequest();
+	}
+	
+	private final ByteBuffer buildHeaderBuffer(Request request, boolean requestClose) {
+		CharBuffer buffer = CharBuffer.allocate(8192);
+		buffer.append(String.format("%s %s %s\r\n", request.method(), request.uri(), request.version()));
+		buffer.append(String.format("Date: %s\r\n", RFC1123_DATE_FORMAT.format(System.currentTimeMillis())));
+		if (requestClose) {
+			buffer.append("Connection: close\r\n");
+		}
+		for(Entry<Message.Header, Collection<String>> header : request.headers().asMap().entrySet()) {
+			buffer.append(String.format("%s: %s\r\n", header.getKey(), StringUtils.join(header.getValue(), ',')));
+		}
+		buffer.append("\r\n");
+		return US_ASCII.encode(buffer);
+	}
+
+	@Override
+	public void onDisconnect() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onMessage(final Response message) {
+		System.out.println(message);
+	}
+	
+}

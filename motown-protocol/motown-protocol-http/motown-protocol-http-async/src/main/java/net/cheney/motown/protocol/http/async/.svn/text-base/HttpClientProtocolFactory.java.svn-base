@@ -1,0 +1,20 @@
+package net.cheney.motown.protocol.http.async;
+
+import net.cheney.motown.http.Request;
+import net.cheney.reactor.AsyncSocketChannel;
+import net.cheney.reactor.ClientProtocolFactory;
+
+public class HttpClientProtocolFactory extends ClientProtocolFactory {
+
+	private final Request request;
+
+	public HttpClientProtocolFactory(final Request request) {
+		this.request = request;
+	}
+	
+	@Override
+	protected void onConnect(final AsyncSocketChannel channel) {
+		HttpClientProtocol protocol = new HttpClientProtocol(channel, request);
+		protocol.onConnect();
+	}
+}

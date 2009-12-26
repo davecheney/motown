@@ -1,0 +1,181 @@
+package net.cheney.motown.protocol.http.async;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import net.cheney.motown.http.Message;
+import net.cheney.motown.protocol.http.common.BodyHandler;
+import net.cheney.motown.protocol.http.common.HttpParser;
+import net.cheney.reactor.AsyncSocketChannel;
+import net.cheney.reactor.CompletionHandler;
+import net.cheney.reactor.Protocol;
+
+import org.apache.commons.lang.time.FastDateFormat;
+import org.apache.log4j.Logger;
+
+abstract class HttpProtocol<V extends Message> extends Protocol<AsyncSocketChannel> {
+	private static final Logger LOG = Logger.getLogger(HttpProtocol.class);
+	
+	private static final int DEFAULT_BUFFER_SIZE = 8192;
+
+	protected static final FastDateFormat RFC1123_DATE_FORMAT = FastDateFormat.getInstance("EEE, dd MMM yyyy HH:mm:ss zzz", TimeZone.getTimeZone("GMT"), Locale.US);
+	
+	protected static final Charset US_ASCII = Charset.forName("US-ASCII");
+	
+	protected static final byte[] CRLF = "\r\n".getBytes();
+	protected static final byte[] CONNECTION_CLOSE = "Connection: close\r\n\r\n".getBytes();
+	protected static final byte[] SPACE = " ".getBytes();
+	protected static final byte[] COLON_SPACE = ": ".getBytes();
+	
+	private class HeaderReadCompletionHandler implements CompletionHandler<ByteBuffer> { 
+		public final void completed(final ByteBuffer buffer) {
+			headerReceived(buffer);
+		}
+	}
+	
+	private final CompletionHandler<ByteBuffer> HEADER_READ_HANDLER = new HeaderReadCompletionHandler();
+	
+	private class BodyReadCompletionHandler implements CompletionHandler<ByteBuffer> {
+		public final void completed(final ByteBuffer buffer) {
+			bodyHandler.bodyReceived(buffer);
+		}
+	}
+	
+	private final CompletionHandler<ByteBuffer> BODY_READ_HANDLER = new BodyReadCompletionHandler();
+	
+	private class CloseAfterWriteCompletionHandler implements CompletionHandler<ByteBuffer> {
+		public final void completed(final ByteBuffer result) {
+			try {
+				channel().socket().shutdownOutput();
+			} catch (IOException e) {
+				LOG.warn(String.format("Unable to close channel %s", channel()), e);
+			}
+		}		
+	}
+	
+	private final CompletionHandler<ByteBuffer> CLOSE_AFTER_WRITE = new CloseAfterWriteCompletionHandler();
+
+	private class CloseAfterWritevCompletionHandler implements CompletionHandler<ByteBuffer[]> {
+		public final void completed(final ByteBuffer[] result) {
+			try {
+				channel().socket().shutdownOutput();
+			} catch (IOException e) {
+				LOG.warn(String.format("Unable to close channel %s", channel()), e);
+			}
+		}		
+	}
+	
+	private final CompletionHandler<ByteBuffer[]> CLOSE_AFTER_WRITEV = new CloseAfterWritevCompletionHandler();
+	
+	private static class FailsafeBodyHandler implements BodyHandler {
+		public void bodyReceived(final ByteBuffer buffer) {
+			throw new RuntimeException("FAILSAFE BODY HANDLER called");
+		}		
+	}
+	
+	private static final BodyHandler FAILSAFE_BODY_HANDLER = new FailsafeBodyHandler();
+	
+
+	private BodyHandler bodyHandler = FAILSAFE_BODY_HANDLER;
+	
+	private V message;
+
+	private final HttpParser<V> parser;
+	
+	protected HttpProtocol(final AsyncSocketChannel channel, HttpParser<V> parser) {
+		super(channel);
+		this.parser = parser;
+		reset();
+	}
+
+	protected void headerReceived(final ByteBuffer buffer) {
+		buffer.flip();
+		message = parseBuffer(buffer);
+		if(message == null) {
+			channel().read(buffer.compact(), HEADER_READ_HANDLER);
+		} else {
+			handleBody(buffer);
+		}
+	}
+	
+	void handleBody(final ByteBuffer buffer) {
+		// handle body
+		switch(message.transferCoding()) {
+		case NONE:
+			final int contentLength = message.contentLength();
+			if (contentLength > 0) {
+				final ByteBuffer bodyBuffer = ByteBuffer.allocate(contentLength).put(buffer);
+				bodyHandler = new IdentityBodyHandler();
+				bodyHandler.bodyReceived(bodyBuffer);
+			} else {
+				onMessage(message);
+			}
+			break;
+		
+		default:
+			throw new IllegalArgumentException();
+		}
+	}
+
+	private V parseBuffer(final ByteBuffer buffer) {
+		return parser.parse(buffer);
+	}
+
+	abstract void onMessage(final V message);
+
+	void reset() {
+		parser.reset(); // TODO - suspect
+		bodyHandler = FAILSAFE_BODY_HANDLER;
+	}
+	
+	protected final void write(final ByteBuffer buff, final boolean closeAfterWrite) {
+		if(closeAfterWrite) {
+			channel().write(buff, CLOSE_AFTER_WRITE);
+		} else {
+			channel().write(buff);
+		}
+	}
+	
+	protected final void write(final ByteBuffer[] buff, final boolean closeAfterWrite) {
+		if(closeAfterWrite) {
+			channel().write(buff, CLOSE_AFTER_WRITEV);
+		} else {
+			channel().write(buff);
+		}	
+	}
+	
+	protected final void shutdown() {
+		class ShutdownEventHandler implements net.cheney.reactor.EventHandler<SocketChannel> {
+
+			public boolean handleEvent(final SocketChannel channel)	throws IOException {
+				channel.socket().shutdownOutput();
+				return true;
+			}
+			
+		}
+		
+		channel().write(new ShutdownEventHandler());
+	}
+
+	protected final void readRequest() {
+		channel().read(ByteBuffer.allocate(DEFAULT_BUFFER_SIZE), HEADER_READ_HANDLER);		
+	}
+
+	protected final class IdentityBodyHandler implements BodyHandler {
+		
+		@SuppressWarnings("unchecked")
+		public void bodyReceived(final ByteBuffer buffer) {
+			if(buffer.hasRemaining()) {
+				channel().read(buffer, BODY_READ_HANDLER);
+			} else {
+				message = (V) message.setBody((ByteBuffer) buffer.flip());
+				onMessage(message);
+			}
+		}
+	}
+
+}
