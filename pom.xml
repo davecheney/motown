@@ -9,6 +9,7 @@
 		<module>motown-api</module>
 		<module>motown-protocol</module>
 		<module>motown-server</module>
+		<module>motown-dav</module>
 	</modules>
 
 	<build>

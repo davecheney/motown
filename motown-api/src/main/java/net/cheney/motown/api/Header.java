@@ -76,40 +76,6 @@ public enum Header implements Message.HttpHeader {
 		ENTITY
 	}
 	
-	public enum Depth { 
-		ZERO, ONE, INFINITY;
-	
-		public Header.Depth decreaseDepth() {
-			return (this == INFINITY ? INFINITY : ZERO);
-		}
-		
-		public static final Header.Depth parse(@Nonnull String depth, @Nonnull Header.Depth defaultDepth) {
-			try {
-				if(depth != null && depth.equalsIgnoreCase("infinity")) {
-					return defaultDepth;
-				} else {
-					return (Integer.parseInt(depth) == 0 ? Depth.ZERO : Depth.ONE);
-				}
-			} catch (NumberFormatException e) {
-				return defaultDepth;
-			}
-		}
-		
-		@Override
-		public final String toString() {
-			switch(this) {
-			case ZERO:
-				return "0";
-				
-			case ONE:
-				return "1";
-				
-			default:
-				return "infinity";
-			}
-		}
-	}
-	
 	private static final Map<String, Header> HTTP_HEADER_MAP = new HashMap<String, Header>();
 	
 	static {

@@ -48,10 +48,9 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 	}
 
 	void headerReceived(final ByteBuffer buffer) {
-		buffer.flip();
 		message = parseBuffer(buffer);
 		if(message == null) {
-			readHeader(buffer);
+			readHeader(buffer.compact());
 		} else {
 			handleBody(buffer);
 		}
@@ -62,7 +61,7 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 			
 			@Override
 			public void completed() {
-				headerReceived(buffer);
+				headerReceived((ByteBuffer) buffer.flip());
 			}
 			
 		});
@@ -99,11 +98,17 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 	}
 	
 	protected final void write(ByteBuffer buffer, boolean close) {
-		if(close) writeAndClose(buffer); else write(buffer);
+		if (close)
+			writeAndClose(buffer);
+		else
+			write(buffer);
 	}
 	
 	protected final void write(ByteBuffer[] buffer, boolean close) {
-		if(close) writeAndClose(buffer); else write(buffer);
+		if (close)
+			writeAndClose(buffer);
+		else
+			write(buffer);
 	}
 	
 	protected final void write(final ByteBuffer buffer) {
