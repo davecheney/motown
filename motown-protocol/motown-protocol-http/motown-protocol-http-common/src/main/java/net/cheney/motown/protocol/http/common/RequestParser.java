@@ -8,9 +8,6 @@ import net.cheney.motown.api.Header;
 import net.cheney.motown.api.Request;
 import net.cheney.motown.api.RequestLine;
 
-import com.google.common.collect.Multimap;
-
-
 public class RequestParser extends HttpParser<Request> {
 
 	private enum State {
@@ -126,8 +123,4 @@ public class RequestParser extends HttpParser<Request> {
 		return null;
 	}
 	
-	@Override
-	Multimap<Header, String> headers() {
-		return request.headers();
-	}
 }

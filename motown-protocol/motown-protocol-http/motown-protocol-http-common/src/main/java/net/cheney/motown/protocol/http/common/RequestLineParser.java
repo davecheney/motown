@@ -3,7 +3,6 @@ package net.cheney.motown.protocol.http.common;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -11,14 +10,10 @@ import net.cheney.motown.api.Method;
 import net.cheney.motown.api.RequestLine;
 import net.cheney.motown.api.Version;
 
-public class RequestLineParser extends ParserSupport {
-	
-	private static final Charset US_ASCII = Charset.forName("US-ASCII");
-	private static final Charset UTF_8 = Charset.forName("UTF-8");
+public class RequestLineParser extends HttpParser<RequestLine> {
 	
 	private enum State {
 		REQUEST_LINE_END, HTTP_VERSION, REQUEST_URI, METHOD
-		
 	}
 	
 	private final Deque<State> stateStack = new ArrayDeque<State>();
@@ -31,7 +26,7 @@ public class RequestLineParser extends ParserSupport {
 		reset();
 	}
 	
-	private void reset() {
+	void reset() {
 		this.version = null;
 		this.url = null;
 		this.method = null;
