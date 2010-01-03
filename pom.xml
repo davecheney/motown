@@ -99,16 +99,24 @@
 				<artifactId>snax</artifactId>
 				<version>0.3-SNAPSHOT</version>
 			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.7</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<reporting>
