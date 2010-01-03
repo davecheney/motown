@@ -120,4 +120,15 @@
 			</plugin>
 		</plugins>
 	</reporting>
+
+	<distributionManagement>
+		<repository>
+			<id>nexus-releases</id>
+			<url>http://nexus.cheney.net/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<url>http://nexus.cheney.net/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
