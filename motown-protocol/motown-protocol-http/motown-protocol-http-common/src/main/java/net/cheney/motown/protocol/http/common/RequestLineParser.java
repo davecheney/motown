@@ -11,7 +11,7 @@ import net.cheney.motown.api.Method;
 import net.cheney.motown.api.RequestLine;
 import net.cheney.motown.api.Version;
 
-public class RequestLineParser {
+public class RequestLineParser extends ParserSupport {
 	
 	private static final Charset US_ASCII = Charset.forName("US-ASCII");
 	private static final Charset UTF_8 = Charset.forName("UTF-8");
@@ -124,12 +124,4 @@ public class RequestLineParser {
 		return null;
 	}
 	
-	boolean isTokenChar(byte b) {
-		return ((b >= '\u0030' && b <= '\u0039')
-				|| (b >= '\u0041' && b <= '\u005A')
-				|| (b >= '\u0061' && b <= '\u007a') || b == '!' || b == '#'
-				|| b == '$' || b == '%' || b == '&' || b == '\'' || b == '*'
-				|| b == '+' || b == '-' || b == '.' || b == '^' || b == '_'
-				|| b == '`' || b == '|' || b == '~');
-	}
 }
