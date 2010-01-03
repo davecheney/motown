@@ -1,0 +1,16 @@
+package net.cheney.motown.dav.annotations;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import net.cheney.motown.http.Request;
+import net.cheney.motown.webservice.HttpMethod;
+
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@HttpMethod(Request.Method.MKCOL)
+public @interface MKCOL {
+
+}

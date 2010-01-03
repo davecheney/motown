@@ -1,0 +1,15 @@
+package net.cheney.motown.dav.resource.api;
+
+import java.net.URI;
+
+import net.cheney.motown.controller.Resource;
+import net.cheney.motown.dav.LockManagerProvidor;
+import net.cheney.motown.http.Path;
+
+public interface DavResourceProvidor extends LockManagerProvidor {
+
+	DavResource resolveResource(Path path);
+
+	<V extends Resource> URI relativizeResource(V resource);
+	
+}

@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import static net.cheney.motown.api.Status.*;
 
 public class Response extends Message {
 	
@@ -31,13 +32,17 @@ public class Response extends Message {
 		return this.statusLine.version();
 	}
 	
+	public static Builder builder(Status status) {
+		return new Builder(status);
+	}
+	
 	public static class Builder extends Message.Builder {
 
 		private Multimap<Header, String> headers = ArrayListMultimap.create();
 		private ByteBuffer body = ByteBuffer.allocate(0);
 		private final Status status;
 
-		public Builder(Status status) {
+		private Builder(Status status) {
 			this.status = status;
 		}
 		
@@ -64,6 +69,17 @@ public class Response extends Message {
 		public Response build() {
 			return new Response(status(), headers(), body());
 		}
+
+		public Builder setHeader(Header key, String value) {
+			headers().put(key, value);
+			return this;
+		}
+
+		@Override
+		public Builder setBody(ByteBuffer buffer) {
+			this.body = buffer;
+			return this;
+		}
 		
 	}
 	
@@ -75,5 +91,54 @@ public class Response extends Message {
 				return body;
 			}
 		}.build();
+	}
+	
+	public static Response successCreated() {
+		return Response.builder(Status.SUCCESS_CREATED).build();
+	}
+	
+	public static Response successNoContent() {
+		return Response.builder(Status.SUCCESS_NO_CONTENT).build();
+	}
+
+	public static Response serverErrorInternal() {
+		return Response.builder(Status.SERVER_ERROR_INTERNAL).build();
+	}
+
+	public static Response serverErrorNotImplemented() {
+		return Response.builder(Status.SERVER_ERROR_NOT_IMPLEMENTED).build();
+	}
+
+	public static Response clientErrorNotFound() {
+		return Response.builder(CLIENT_ERROR_NOT_FOUND).build();
+	}
+
+	public static Response clientErrorPreconditionFailed() {
+		return Response.builder(CLIENT_ERROR_PRECONDITION_FAILED).build();
+	}
+	
+	public static Response clientErrorMethodNotAllowed() {
+		return Response.builder(CLIENT_ERROR_METHOD_NOT_ALLOWED).build();
+	}
+	
+	public static Response clientErrorConflict() {
+		return Response.builder(CLIENT_ERROR_CONFLICT).build();
+	}
+	
+	public static Response clientErrorLocked() {
+		return Response.builder(CLIENT_ERROR_LOCKED).build();
+	}
+
+	public static Response clientErrorUnsupportedMediaType() {
+		return Response.builder(CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE).build();
+	}
+	
+	public static Response redirectionNotModified() {
+		return Response.builder(Status.REDIRECTION_NOT_MODIFIED).build();
+	}
+	
+
+	public static Response success(MimeType mime, ByteBuffer buffer) {
+		return Response.builder(SUCCESS_OK).setHeader(Header.CONTENT_TYPE, mime.toString()).setBody(buffer).build();
 	}
 }

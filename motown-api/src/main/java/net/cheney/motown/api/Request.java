@@ -3,7 +3,13 @@ package net.cheney.motown.api;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 
 public class Request extends Message {
@@ -38,6 +44,20 @@ public class Request extends Message {
 	
 	public static Request.Builder builder(Method method, String uri) {
 		return new Builder(method, uri);
+	}
+	
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+	}
+	
+	@Override
+	public boolean equals(Object that) {
+		return EqualsBuilder.reflectionEquals(this, that);
+	}
+	
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
 	}
 	
 	public static class Builder extends Message.Builder {
@@ -80,14 +100,20 @@ public class Request extends Message {
 		}
 
 		@Override
-		public Request build() {
+		public Message build() {
 			return new Request(new RequestLine(method(), uri(), version()), headers(), body());
+		}
+
+		@Override
+		public Builder setBody(ByteBuffer buffer) {
+			this.body = buffer;
+			return this;
 		}
 		
 	}
 
 	@Override
-	public Request setBody(final ByteBuffer body) {
+	public Message setBody(final ByteBuffer body) {
 		return new Builder(method(), uri()) {
 			@Override
 			ByteBuffer body() {
@@ -95,4 +121,17 @@ public class Request extends Message {
 			}
 		}.build();
 	}
+
+	public Depth getDepth(Depth defaultDepth) {
+		return Depth.parse(Iterables.getOnlyElement(headers().get(Header.DEPTH), ""), defaultDepth);
+	}
+
+	public URI getDestination() {
+		return URI.create(getOnlyElement(Header.DESTINATION, ""));
+	}
+
+	public boolean isOverwrite() {
+		return getOnlyElement(Header.OVERWRITE, "T").equals("T");
+	}	
+	
 }

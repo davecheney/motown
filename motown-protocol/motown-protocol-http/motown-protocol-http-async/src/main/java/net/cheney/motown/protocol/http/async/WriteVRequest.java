@@ -14,16 +14,9 @@ public class WriteVRequest extends
 	}
 	
 	@Override
-	public boolean writeTo(SocketChannel channel) throws IOException {
+	public boolean accept(SocketChannel channel) throws IOException {
 		channel.write(buffers);
 		return !buffers[buffers.length - 1].hasRemaining();
 	}
-
-	@Override
-	public void completed() {
-		// TODO Auto-generated method stub
-		
-	}
 	
-
 }

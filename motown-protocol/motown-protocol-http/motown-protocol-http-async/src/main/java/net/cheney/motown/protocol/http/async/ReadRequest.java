@@ -14,7 +14,7 @@ public abstract class ReadRequest extends net.cheney.rev.channel.AsyncSocketChan
 	}
 
 	@Override
-	public boolean readFrom(SocketChannel channel) throws IOException {
+	public boolean accept(SocketChannel channel) throws IOException {
 		switch(channel.read(buffer)) {
 		case -1:
 			throw new ClosedChannelException();

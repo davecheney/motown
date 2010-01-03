@@ -44,15 +44,27 @@ public abstract class Message {
 	}
 	
 	public TransferCoding transferCoding() {
-		return "chunked".equalsIgnoreCase(Iterables.getOnlyElement(headers().get(Header.TRANSFER_ENCODING), null)) ? TransferCoding.CHUNKED : TransferCoding.NONE;
+		return "chunked".equalsIgnoreCase(getOnlyElement(Header.TRANSFER_ENCODING)) ? TransferCoding.CHUNKED : TransferCoding.NONE;
 	}
 	
+	private String getOnlyElement(Header header) {
+		return getOnlyElement(header, null);
+	}
+
 	public final int contentLength() {
 		return Integer.parseInt(Iterables.getOnlyElement(headers().get(Header.CONTENT_LENGTH), "0"));
 	}
 	
 	public boolean closeRequested() {
 		return "close".equals(Iterables.getOnlyElement(headers().get(Header.CONNECTION), ""));
+	}
+
+	public final boolean containsHeader(Header header) {
+		return headers().containsKey(header);
+	}
+	
+	protected String getOnlyElement(Header header, String defaultValue) {
+		return Iterables.getOnlyElement(headers().get(header), defaultValue);
 	}
 
 	public abstract static class Builder {
@@ -64,5 +76,8 @@ public abstract class Message {
 		abstract Multimap<Header, String> headers();
 		
 		abstract ByteBuffer body();
+
+		public abstract Builder setBody(ByteBuffer buffer);
+
 	}
 }
