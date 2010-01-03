@@ -9,6 +9,12 @@ public abstract class HttpParser<V> {
 	static final Charset UTF_8 = Charset.forName("UTF-8");
 	
 	public abstract V parse(ByteBuffer buffer);
+	
+	
+	// Test support
+	V parse(CharSequence cs) {
+		return parse(ByteBuffer.wrap(cs.toString().getBytes(US_ASCII)));
+	}
 
 	final boolean isWhitespace(byte t) {
 		return (t == ' ' || t == '\t');
