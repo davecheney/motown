@@ -321,11 +321,14 @@ public abstract class DavController extends StaticController {
 
 	@PROPFIND
 	public Response propfind(@Context Request request) throws IOException {
-		final Path path = Path.fromString(request.uri().getPath());
+		return propfind(Path.fromString(request.uri().getPath()), request.getDepth(Depth.INFINITY), request.body());
+	}
+
+	private Response propfind(Path path, Depth depth, ByteBuffer body) throws IOException {
 		final DavResource resource = resolveResource(path);
 
-			final List<QName> properties = getProperties(request.body());
-			final List<RESPONSE> responses = propfind(properties, resource, request.getDepth(Depth.INFINITY));
+			final List<QName> properties = getProperties(body);
+			final List<RESPONSE> responses = propfind(properties, resource, depth);
 			if (resource.exists()) {
 				return successMultiStatus( multistatus(responses));
 			} else {

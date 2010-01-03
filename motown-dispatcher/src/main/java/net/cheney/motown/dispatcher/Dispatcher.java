@@ -19,6 +19,7 @@ public abstract class Dispatcher implements HttpRequestHandler {
 	public abstract void handleRequest(Request request, HttpResponseHandler responseHandler);
 	
 	protected Runnable createWorker(final Request request, final HttpResponseHandler responseHandler) {
+		LOG.info(String.format("%s %s %s %s", request.method(), request.uri(), request.version(), request.headers()));
 		return new Worker(request, responseHandler);
 	}
 	
@@ -35,6 +36,7 @@ public abstract class Dispatcher implements HttpRequestHandler {
 		public final void run() {
 			try {
 				final Response response = dispatchable.dispatch(request);
+				LOG.info(String.format("%s %s", response.status(), response.headers()));
 				boolean close = request.closeRequested();
 				if (!close) {
 					close = response.closeRequested();

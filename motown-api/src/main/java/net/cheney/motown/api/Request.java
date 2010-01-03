@@ -123,7 +123,7 @@ public class Request extends Message {
 	}
 
 	public Depth getDepth(Depth defaultDepth) {
-		return Depth.parse(Iterables.getOnlyElement(headers().get(Header.DEPTH), ""), defaultDepth);
+		return Depth.parse(Iterables.getOnlyElement(headers().get(Header.DEPTH), defaultDepth.toString()), defaultDepth);
 	}
 
 	public URI getDestination() {
