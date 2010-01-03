@@ -18,7 +18,7 @@ public abstract class HttpParser<V> {
 		return (t >= '\u0021' && t <= '\u007E');
 	}
 
-	abstract void reset();
+	public abstract void reset();
 
 	final boolean isTokenChar(byte b) {
 		return ((b >= '\u0030' && b <= '\u0039')

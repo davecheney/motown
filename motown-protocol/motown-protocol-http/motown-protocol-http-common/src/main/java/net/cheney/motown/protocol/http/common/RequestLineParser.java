@@ -26,7 +26,8 @@ public class RequestLineParser extends HttpParser<RequestLine> {
 		reset();
 	}
 	
-	void reset() {
+	@Override
+	public void reset() {
 		this.version = null;
 		this.url = null;
 		this.method = null;
@@ -36,6 +37,7 @@ public class RequestLineParser extends HttpParser<RequestLine> {
 		stateStack.addFirst(State.METHOD);
 	}
 
+	@Override
 	public final RequestLine parse(final ByteBuffer buffer) {
 		// mark the current position of the buffer
 		// if the parse is not complete, we will rewind to the mark()ed position
