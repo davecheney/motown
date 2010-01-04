@@ -73,7 +73,7 @@ public class RequestParser extends HttpParser<Request> {
 				
 			case HEADER_VALUE:
 				byte t = buffer.get();
-				if(isVisibleCharacter(t) | isWhitespace(t)) {
+				if(isVisibleCharacter(t) || isWhitespace(t)) {
 					continue;
 				} else if( t == '\r') {
 					if(headerKey != null) {
