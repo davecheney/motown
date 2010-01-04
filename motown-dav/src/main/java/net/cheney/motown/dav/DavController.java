@@ -55,6 +55,7 @@ import net.cheney.motown.resource.api.Elements;
 import net.cheney.motown.resource.api.Lock;
 import net.cheney.motown.resource.api.Property;
 import net.cheney.motown.resource.api.Resource;
+import net.cheney.motown.resource.api.ResourceProvidor;
 import net.cheney.motown.resource.api.Elements.ACTIVE_LOCK;
 import net.cheney.motown.resource.api.Elements.MULTISTATUS;
 import net.cheney.motown.resource.api.Elements.PROPSTAT;
@@ -76,7 +77,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterables;
 
-public abstract class DavController {
+public class DavController {
 	
 	private static final Logger LOG = Logger.getLogger(DavController.class);
 
@@ -85,8 +86,14 @@ public abstract class DavController {
 			Property.GET_CONTENT_LENGTH, Property.GET_LAST_MODIFIED,
 			Property.RESOURCE_TYPE });
 	
-	private static final Charset CHARSET_UTF_8 = Charset.forName("UTF-8");	
+	private static final Charset CHARSET_UTF_8 = Charset.forName("UTF-8");
+
+	private final ResourceProvidor providor;	
 	
+	public DavController(ResourceProvidor providor) {
+		this.providor = providor;
+	}
+
 	@GET
 	public Response get(@Context Request request) throws IOException {
 		final Path path = Path.fromString(request.uri().getPath());
@@ -602,9 +609,11 @@ public abstract class DavController {
 		return document;
 	}
 	
+	protected URI relativizeResource(Resource resource) {
+		return providor.relativizeResource(resource);
+	}
 	
-	protected abstract Resource resolveResource(Path path);
-	
-	protected abstract URI relativizeResource(Resource resource); 
-	
+	protected Resource resolveResource(Path path) {
+		return providor.resolveResource(path);
+	}
 }

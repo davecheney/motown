@@ -100,7 +100,7 @@ public class Request extends Message {
 		}
 
 		@Override
-		public Message build() {
+		public Request build() {
 			return new Request(new RequestLine(method(), uri(), version()), headers(), body());
 		}
 
