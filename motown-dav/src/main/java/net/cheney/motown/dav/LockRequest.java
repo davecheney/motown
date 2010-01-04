@@ -1,7 +1,7 @@
 package net.cheney.motown.dav;
 
-import net.cheney.motown.dav.Lock.Scope;
-import net.cheney.motown.dav.Lock.Type;
+import net.cheney.motown.resource.api.Lock.Scope;
+import net.cheney.motown.resource.api.Lock.Type;
 
 public final class LockRequest {
 

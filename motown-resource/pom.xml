@@ -5,26 +5,27 @@
 		<groupId>net.cheney.motown</groupId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.cheney.motown</groupId>
-	<artifactId>motown-webservice</artifactId>
-
+	<artifactId>motown-resource</artifactId>
+	<version>1.0-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>net.cheney.motown</groupId>
-			<artifactId>motown-protocol-common</artifactId>
+			<artifactId>motown-api</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
-
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
+			<groupId>net.cheney.snax</groupId>
+			<artifactId>snax</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>net.cheney.motown</groupId>
-			<artifactId>motown-dispatcher</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<groupId>net.cheney.uri</groupId>
+			<artifactId>uri</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
 		</dependency>
 	</dependencies>
 </project>
