@@ -59,7 +59,9 @@ import net.cheney.uri.Path;
 
 import org.apache.log4j.Logger;
 
+import com.google.common.base.Function;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Iterables;
 
 public abstract class DavController extends StaticController {
 	
@@ -309,7 +311,7 @@ public abstract class DavController extends StaticController {
 	public Response proppatch(@Context Request request) throws IOException {
 		final Path path = Path.fromString(request.uri().getPath());
 		final DavResource resource = resolveResource(path);
-		final List<QName> properties = getProperties(request.body());
+		final Iterable<QName> properties = getProperties(request.body());
 		final List<RESPONSE> responses = propfind(properties, resource, request.getDepth(Depth.INFINITY));
 		return successMultiStatus(multistatus(responses));
 	}
@@ -327,7 +329,7 @@ public abstract class DavController extends StaticController {
 	private Response propfind(Path path, Depth depth, ByteBuffer body) throws IOException {
 		final DavResource resource = resolveResource(path);
 
-			final List<QName> properties = getProperties(body);
+			final Iterable<QName> properties = getProperties(body);
 			final List<RESPONSE> responses = propfind(properties, resource, depth);
 			if (resource.exists()) {
 				return successMultiStatus( multistatus(responses));
@@ -336,7 +338,7 @@ public abstract class DavController extends StaticController {
 			}
 	}
 
-	private final List<RESPONSE> propfind(final List<QName> properties, final DavResource resource, final Depth depth) {
+	private final List<RESPONSE> propfind(final Iterable<QName> properties, final DavResource resource, final Depth depth) {
 		final List<RESPONSE> responses = new ArrayList<RESPONSE>();
 		
 		responses.add(response(href(relativizeResource(resource)), getProperties(resource, properties)));
@@ -349,10 +351,10 @@ public abstract class DavController extends StaticController {
 		return responses;
 	}
 
-	private final List<PROPSTAT> getProperties(final DavResource resource, final List<QName> properties) {
+	private final List<PROPSTAT> getProperties(final DavResource resource, final Iterable<QName> properties) {
 		final List<PROPSTAT> propstats = new ArrayList<PROPSTAT>(2);
-		final List<Element> foundProps = new ArrayList<Element>(properties.size());
-		final List<Element> notFoundProps = new ArrayList<Element>(properties.size());
+		final List<Element> foundProps = new ArrayList<Element>();
+		final List<Element> notFoundProps = new ArrayList<Element>();
 		for (final QName property : properties) {
 			final Element prop = resource.getProperty(property);
 			if(prop == null) {
@@ -370,18 +372,19 @@ public abstract class DavController extends StaticController {
 		return propstats;
 	}
 
-	private final List<QName> getProperties(final ByteBuffer buffer) throws IOException {
+	private final Iterable<QName> getProperties(final ByteBuffer buffer) throws IOException {
 		final Document doc = getPropfind(buffer);
 		final Element propfind = doc.rootElement();
 		final Element props = propfind.getFirstChild(Elements.PROP);
 		if (props == null || !props.hasChildren()) {
 			return ALL_PROPS;
 		} else {
-			final List<QName> properties = new ArrayList<QName>();
-			for (final Element prop : props.childElements()) {
-				properties.add(prop.qname()); 
-			}
-			return properties;
+			return Iterables.transform(props.childElements(), new Function<Element, QName>() {
+				@Override
+				public QName apply(Element property) {
+					return property.qname();
+				}
+			});
 		}
 	}
 
