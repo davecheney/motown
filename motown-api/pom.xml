@@ -10,6 +10,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.cheney.motown</groupId>
 	<artifactId>motown-api</artifactId>
+	
+	<name>Motown API</name>
 
 	<dependencies>
 		<dependency>

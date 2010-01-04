@@ -12,6 +12,8 @@
 	<artifactId>motown-protocol-http</artifactId>
 	<packaging>pom</packaging>
 	
+	<name>Motown HTTP Protocol POM</name>
+	
 	<modules>
 		<module>motown-protocol-http-common</module>
 		<module>motown-protocol-http-async</module>

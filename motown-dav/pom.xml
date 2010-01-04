@@ -10,6 +10,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.cheney.motown</groupId>
 	<artifactId>motown-dav</artifactId>
+	
+	<name>Motown WebDAV Support</name>
 
 	<dependencies>
 		<dependency>

@@ -8,6 +8,9 @@
   <groupId>net.cheney.motown</groupId>
   <artifactId>motown-dispatcher</artifactId>
   <version>1.0-SNAPSHOT</version>
+  
+  <name>Motown Dispatcher</name>
+  
   <dependencies>
   	<dependency>
   		<groupId>net.cheney.motown</groupId>

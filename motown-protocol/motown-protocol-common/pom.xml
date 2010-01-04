@@ -11,6 +11,8 @@
 	<groupId>net.cheney.motown</groupId>
 	<artifactId>motown-protocol-common</artifactId>
 
+	<name>Motown Protocol Common</name>
+
 	<dependencies>
 		<dependency>
 			<groupId>net.cheney.motown</groupId>

@@ -11,6 +11,8 @@
 	<groupId>net.cheney.motown</groupId>
 	<artifactId>motown-protocol-http-async</artifactId>
 
+	<name>Motown HTTP Protocol Async Support</name>
+
 	<dependencies>
 		<dependency>
 			<groupId>net.cheney.motown</groupId>
