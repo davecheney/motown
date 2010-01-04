@@ -17,7 +17,7 @@ public abstract class HttpParser<V> {
 	}
 
 	final boolean isWhitespace(byte t) {
-		return (t == ' ' || t == '\t');
+		return (t == ' ' | t == '\t');
 	}
 
 	final boolean isVisibleCharacter(byte t) {
