@@ -42,7 +42,7 @@ public class DynamicResourceHandlerTest {
 	}
 	
 	@Test
-	public void testNotFound() {
+	public void testNotImplemented() {
 		Request request = Request.builder(Method.PUT, "/").build();
 		Response response = handler.dispatch(request);
 		
