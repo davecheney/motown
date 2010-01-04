@@ -21,6 +21,7 @@ public class DynamicResourceHandlerTest {
 	public static void init() {
 		factory = ResourceFactory.factoryForResource(new Object() {
 			
+			@SuppressWarnings("unused")
 			@GET
 			public Response get() {
 				return Response.successNoContent();

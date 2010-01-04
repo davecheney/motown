@@ -55,7 +55,7 @@ public class RequestParser extends HttpParser<Request> {
 			case HEADER_KEY:
 				byte b = buffer.get();
 				if(isTokenChar(b)) {
-					// do nothing
+					continue;
 				} else if (b == ':') {
 					int length = buffer.position() - offset;
 					String s = new String(buffer.array(), buffer.arrayOffset() + offset, --length, US_ASCII);
@@ -73,8 +73,8 @@ public class RequestParser extends HttpParser<Request> {
 				
 			case HEADER_VALUE:
 				byte t = buffer.get();
-				if(isVisibleCharacter(t) || isWhitespace(t)) {
-					// do nothing
+				if(isVisibleCharacter(t) | isWhitespace(t)) {
+					continue;
 				} else if( t == '\r') {
 					if(headerKey != null) {
 						// skip headers with no known key
@@ -90,9 +90,7 @@ public class RequestParser extends HttpParser<Request> {
 				break;
 				
 			case WHITESPACE:
-				if(isWhitespace(buffer.get())) {
-					// do nothing
-				} else {
+				if(!isWhitespace(buffer.get())) {
 					stateStack.pop();
 				}
 				break;
