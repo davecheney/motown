@@ -1,9 +1,5 @@
 package net.cheney.motown.resource.file;
 
-import static net.cheney.motown.resource.api.Elements.getContentLength;
-import static net.cheney.motown.resource.api.Elements.getLastModified;
-import static net.cheney.motown.resource.api.Elements.resourceType;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -18,18 +14,11 @@ import java.util.Date;
 import java.util.List;
 
 import net.cheney.motown.api.Method;
-import net.cheney.motown.resource.api.Elements;
-import net.cheney.motown.resource.api.Lock;
-import net.cheney.motown.resource.api.Property;
 import net.cheney.motown.resource.api.Resource;
-import net.cheney.motown.resource.api.Lock.Scope;
-import net.cheney.motown.resource.api.Lock.Type;
-import net.cheney.snax.model.Element;
-import net.cheney.snax.model.QName;
 
 import org.apache.commons.io.FileUtils;
 
-public class FileResource implements Resource {
+public class FileResource extends Resource {
 
 	private final File file;
 	private final FileResourceProvidor providor;
@@ -178,41 +167,9 @@ public class FileResource implements Resource {
 	public Collection<ComplianceClass> davOptions() {
 		return Arrays.asList(new ComplianceClass[] { ComplianceClass.LEVEL_1, ComplianceClass.LEVEL_2 });
 	}
-	
-	public boolean isLocked() {
-		return providor().lockManager().isLocked(this);
-	}
-	
-	public void unlock() {
-		providor().lockManager().unlock(this);
-	}
-	
-	public Lock lock(final Type type, final Scope scope) {
-		return providor().lockManager().lock(this, type, scope);
-	}
 
 	public FileResourceProvidor providor() {
 		return providor;
-	}
-
-	public Element getProperty(QName property) {
-		if (property.equals(Property.GET_CONTENT_LENGTH)) {
-			return getContentLength(size());
-		}
-
-		if (property.equals(Property.RESOURCE_TYPE)) {
-			return resourceType(isCollection());
-		}
-
-		if (property.equals(Property.GET_LAST_MODIFIED)) {
-			return getLastModified(lastModified());
-		}
-
-		 if (property.equals(Property.DISPLAY_NAME)) {
-			 return Elements.displayName(displayName());
-		 }
-		 
-		 return null;
 	}
 
 }

@@ -1,5 +1,9 @@
 package net.cheney.motown.resource.api;
 
+import static net.cheney.motown.resource.api.Elements.getContentLength;
+import static net.cheney.motown.resource.api.Elements.getLastModified;
+import static net.cheney.motown.resource.api.Elements.resourceType;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Collection;
@@ -12,7 +16,7 @@ import net.cheney.motown.resource.api.Lock.Type;
 import net.cheney.snax.model.Element;
 import net.cheney.snax.model.QName;
 
-public interface Resource {
+public abstract class Resource {
 	
 	public enum ComplianceClass {
 
@@ -32,43 +36,70 @@ public interface Resource {
 		}
 	}
 
-	boolean mkcol();
+	public abstract boolean mkcol();
 
-	void copyTo(Resource destination) throws IOException;
+	public abstract void copyTo(Resource destination) throws IOException;
 
-	void moveTo(Resource destination) throws IOException;
+	public abstract void moveTo(Resource destination) throws IOException;
 	
-	Collection<ComplianceClass> davOptions();
+	public abstract Collection<ComplianceClass> davOptions();
 
-	void unlock();
+	public boolean isLocked() {
+		return providor().lockManager().isLocked(this);
+	}
 	
-	Lock lock(Type type, Scope scope);
+	protected abstract ResourceProvidor providor();
 
-	Element getProperty(QName property);
+	public void unlock() {
+		providor().lockManager().unlock(this);
+	}
 	
-	boolean exists();
+	public Lock lock(final Type type, final Scope scope) {
+		return providor().lockManager().lock(this, type, scope);
+	}
+
+	public Element getProperty(QName property) {
+		if (property.equals(Property.GET_CONTENT_LENGTH)) {
+			return getContentLength(size());
+		}
+
+		if (property.equals(Property.RESOURCE_TYPE)) {
+			return resourceType(isCollection());
+		}
+
+		if (property.equals(Property.GET_LAST_MODIFIED)) {
+			return getLastModified(lastModified());
+		}
+
+		 if (property.equals(Property.DISPLAY_NAME)) {
+			 return Elements.displayName(displayName());
+		 }
+		 
+		 return null;
+	}
 	
-	Date lastModified();
+	public abstract boolean exists();
 	
-	Collection<Method> supportedMethods();
-
-	ByteBuffer entity() throws IOException;
-
-	void put(ByteBuffer entity) throws IOException;
+	public abstract Date lastModified();
 	
-	String etag();
+	public abstract Collection<Method> supportedMethods();
+
+	public abstract ByteBuffer entity() throws IOException;
+
+	public abstract void put(ByteBuffer entity) throws IOException;
 	
-	long size();
-
-	String displayName();
-
-	boolean delete();
-
-	Resource parent();
+	public abstract String etag();
 	
-	boolean isCollection();
+	public abstract long size();
 
-	List<Resource> members();
+	public abstract String displayName();
 
-	boolean isLocked();
+	public abstract boolean delete();
+
+	public abstract Resource parent();
+	
+	public abstract boolean isCollection();
+
+	public abstract List<Resource> members();
+
 }
