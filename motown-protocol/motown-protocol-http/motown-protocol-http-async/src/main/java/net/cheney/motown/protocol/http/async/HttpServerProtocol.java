@@ -26,11 +26,6 @@ public class HttpServerProtocol extends HttpProtocol<Request> implements HttpRes
 	}
 
 	@Override
-	protected final void reset() {
-		super.reset();
-	}
-	
-	@Override
 	final void onMessage(final Request request) {
 		handler.handleRequest(request, this);
 	}
