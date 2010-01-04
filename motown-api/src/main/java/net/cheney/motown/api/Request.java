@@ -114,12 +114,10 @@ public class Request extends Message {
 
 	@Override
 	public Message setBody(final ByteBuffer body) {
-		return new Builder(method(), uri()) {
-			@Override
-			ByteBuffer body() {
-				return body;
-			}
-		}.build();
+		// TODO - Shoddy hack
+		Builder builder = new Builder(method(), uri()).setBody(body);
+		builder.headers = headers();
+		return builder.build();
 	}
 
 	public Depth getDepth(Depth defaultDepth) {

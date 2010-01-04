@@ -34,7 +34,7 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 	
 	private static final BodyHandler FAILSAFE_BODY_HANDLER = new FailsafeBodyHandler();
 
-	private BodyHandler bodyHandler = FAILSAFE_BODY_HANDLER;
+	private BodyHandler bodyHandler;
 	
 	private V message;
 
