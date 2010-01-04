@@ -30,7 +30,7 @@ public class HttpServerProtocol extends HttpProtocol<Request> implements HttpRes
 		handler.handleRequest(request, this);
 	}
 	
-	public final void sendResponse(final Response response, final boolean requestClose) {
+	public final void sendResponse(final Response response, boolean requestClose) {
 		ByteBuffer header = buildHeaderBuffer(response, requestClose);
 		ByteBuffer body = response.body();
 		if(body == null) {
@@ -53,7 +53,7 @@ public class HttpServerProtocol extends HttpProtocol<Request> implements HttpRes
 			buffer.append("Connection: close\r\n");
 		}
 		for(Entry<Header, Collection<String>> header : response.headers().asMap().entrySet()) {
-			buffer.append(String.format("%s: %s\r\n", header.getKey(), StringUtils.join(header.getValue(), ',')));
+			buffer.append(String.format("%s: %s\r\n", header.getKey().value(), StringUtils.join(header.getValue(), ',')));
 		}
 		buffer.append("\r\n");
 		return US_ASCII.encode((CharBuffer)buffer.flip());
