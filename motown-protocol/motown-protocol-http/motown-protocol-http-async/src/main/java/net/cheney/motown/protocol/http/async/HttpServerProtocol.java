@@ -48,6 +48,8 @@ public class HttpServerProtocol extends HttpProtocol<Request> implements HttpRes
 		buffer.append(String.format("Date: %s\r\n", RFC1123_DATE_FORMAT.format(System.currentTimeMillis())));
 		if (response.hasBody()) {
 			buffer.append(String.format("Content-Length: %d\r\n", response.body().remaining()));
+		} else {
+			buffer.append("Content-Length: 0\r\n");
 		}
 		if (requestClose) {
 			buffer.append("Connection: close\r\n");

@@ -2,6 +2,11 @@ package net.cheney.motown.api;
 
 import java.nio.ByteBuffer;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import static net.cheney.motown.api.Status.*;
@@ -36,10 +41,24 @@ public class Response extends Message {
 		return new Builder(status);
 	}
 	
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+	}
+	
+	@Override
+	public boolean equals(Object that) {
+		return EqualsBuilder.reflectionEquals(this, that);
+	}
+	
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+	
 	public static class Builder extends Message.Builder {
 
 		private Multimap<Header, String> headers = ArrayListMultimap.create();
-		private ByteBuffer body = ByteBuffer.allocate(0);
+		private ByteBuffer body = null;
 		private final Status status;
 
 		private Builder(Status status) {
