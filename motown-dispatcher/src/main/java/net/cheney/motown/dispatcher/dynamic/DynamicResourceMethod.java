@@ -52,10 +52,10 @@ public class DynamicResourceMethod implements ResourceMethod {
 			LOG.debug(String.format("Invoking %s(%s)",method.getName(),Arrays.asList(args).toString()));
 			return (Response) method.invoke(resource, args);
 		} catch (IllegalArgumentException e) {
-			LOG.error(e);
+			LOG.error(String.format("Failure Invoking %s(%s)",method.getName(),Arrays.asList(args).toString()),e);
 			return Response.serverErrorInternal();
 		} catch (IllegalAccessException e) {
-			LOG.error(e);
+			LOG.error(String.format("Failure Invoking %s(%s)",method.getName(),Arrays.asList(args).toString()),e);
 			return Response.serverErrorInternal();
 		} catch (InvocationTargetException e) {
 			LOG.error(String.format("Failure Invoking %s(%s)",method.getName(),Arrays.asList(args).toString()),e);
