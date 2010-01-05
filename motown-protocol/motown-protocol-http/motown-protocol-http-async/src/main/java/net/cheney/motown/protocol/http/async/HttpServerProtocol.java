@@ -50,7 +50,7 @@ public class HttpServerProtocol extends HttpProtocol<Request> implements HttpRes
 		// http://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging-08#section-3.4
 		// elide Content-Length header where not permitted
 		// TODO: needs unit test
-		if (response.status().mayContainBody()) {
+		if (response.mayContainBody()) {
 			if (response.hasBody()) {
 				buffer.append(String.format("Content-Length: %d\r\n", response.body().remaining()));
 			} else {
