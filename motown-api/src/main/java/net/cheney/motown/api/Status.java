@@ -102,10 +102,4 @@ public enum Status {
 			return (compareTo(SERVER_ERROR_INTERNAL) >= 0);
 		}
 		
-		
-		// http://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging-08#section-3.4
-		public boolean mayContainBody() {
-			return (!isInformational() && this != SUCCESS_NO_CONTENT && this != REDIRECTION_NOT_MODIFIED);
-		}
-		
 	}

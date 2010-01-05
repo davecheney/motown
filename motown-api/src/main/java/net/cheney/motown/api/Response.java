@@ -160,4 +160,9 @@ public class Response extends Message {
 	public static Response success(MimeType mime, ByteBuffer buffer) {
 		return Response.builder(SUCCESS_OK).setHeader(Header.CONTENT_TYPE, mime.toString()).setBody(buffer).build();
 	}
+
+	public boolean mayContainBody() {
+		// http://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging-08#section-3.4
+		return (!status().isInformational() && !status().equals(SUCCESS_NO_CONTENT) && !status().equals(REDIRECTION_NOT_MODIFIED));
+	}
 }
