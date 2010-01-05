@@ -19,8 +19,6 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 	private static final Logger LOG = Logger.getLogger(HttpProtocol.class);
 	
 	private static final int DEFAULT_BUFFER_SIZE = 8192;
-
-	protected static final FastDateFormat RFC1123_DATE_FORMAT = FastDateFormat.getInstance("EEE, dd MMM yyyy HH:mm:ss zzz", TimeZone.getTimeZone("GMT"), Locale.US);
 	
 	protected static final Charset US_ASCII = Charset.forName("US-ASCII");
 	

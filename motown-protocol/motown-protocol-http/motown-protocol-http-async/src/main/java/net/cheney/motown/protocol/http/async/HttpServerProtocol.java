@@ -45,7 +45,6 @@ public class HttpServerProtocol extends HttpProtocol<Request> implements HttpRes
 	private final ByteBuffer buildHeaderBuffer(Response response, boolean requestClose) {
 		CharBuffer buffer = CharBuffer.allocate(8192);
 		buffer.append(String.format("%s %s %s\r\n", response.version(), response.status().code(), response.status().reason()));
-		buffer.append(String.format("Date: %s\r\n", RFC1123_DATE_FORMAT.format(System.currentTimeMillis())));
 		
 		// http://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging-08#section-3.4
 		// elide Content-Length header where not permitted

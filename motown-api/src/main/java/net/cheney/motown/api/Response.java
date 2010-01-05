@@ -1,11 +1,14 @@
 package net.cheney.motown.api;
 
 import java.nio.ByteBuffer;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang.time.FastDateFormat;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -56,12 +59,16 @@ public class Response extends Message {
 	}
 	
 	public static class Builder extends Message.Builder {
+		
+		protected static final FastDateFormat RFC1123_DATE_FORMAT = FastDateFormat.getInstance("EEE, dd MMM yyyy HH:mm:ss zzz", TimeZone.getTimeZone("GMT"), Locale.US);
 
-		private Multimap<Header, String> headers = ArrayListMultimap.create();
+		private Multimap<Header, String> headers;
 		private ByteBuffer body = null;
 		private final Status status;
 
 		private Builder(Status status) {
+			headers = ArrayListMultimap.create();
+			setHeader(Header.DATE, RFC1123_DATE_FORMAT.format(System.currentTimeMillis()));
 			this.status = status;
 		}
 		
