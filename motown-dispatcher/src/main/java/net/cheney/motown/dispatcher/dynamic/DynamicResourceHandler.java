@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
@@ -56,6 +58,11 @@ public class DynamicResourceHandler implements ResourceHandler {
 			}
 			
 		});
+	}
+	
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this);
 	}
 
 }

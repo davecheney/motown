@@ -9,6 +9,8 @@ import net.cheney.motown.api.Message;
 import net.cheney.motown.api.Response;
 import net.cheney.motown.dispatcher.ResourceMethod;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.log4j.Logger;
 
 public class DynamicResourceMethod implements ResourceMethod {
@@ -59,5 +61,10 @@ public class DynamicResourceMethod implements ResourceMethod {
 			args[i] = paramInjectors[i].injectParameter(request);
 		}
 		return args;
+	}
+	
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
 	}
 }

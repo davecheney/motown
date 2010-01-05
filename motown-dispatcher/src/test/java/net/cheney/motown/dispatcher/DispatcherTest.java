@@ -1,7 +1,6 @@
 package net.cheney.motown.dispatcher;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import net.cheney.motown.api.Method;
 import net.cheney.motown.api.Request;
@@ -14,7 +13,6 @@ import net.cheney.motown.protocol.common.HttpResponseHandler;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.varia.NullAppender;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,6 +23,14 @@ public class DispatcherTest {
 	private DynamicResourceHandler handler;
 	private Dispatcher dispatcher;
 	private TestResponseHandler responseHandler;
+	
+	public static class Get {
+		@SuppressWarnings("unused")
+		@GET
+		public Response get() {
+			return Response.successNoContent();
+		}
+	}
 	
 	public static class TestResponseHandler implements HttpResponseHandler {
 
@@ -48,14 +54,7 @@ public class DispatcherTest {
 	@BeforeClass
 	public static void init() {
 		BasicConfigurator.configure(new NullAppender());
-		factory = ResourceFactory.factoryForResource(new Object() {
-			
-			@SuppressWarnings("unused")
-			@GET
-			public Response get() {
-				return Response.successNoContent();
-			}
-		});
+		factory = ResourceFactory.factoryForResource(new Get());
 	}
 	
 	@Before
