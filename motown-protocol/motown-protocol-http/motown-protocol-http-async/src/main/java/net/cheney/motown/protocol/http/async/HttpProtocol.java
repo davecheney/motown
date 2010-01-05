@@ -1,5 +1,6 @@
 package net.cheney.motown.protocol.http.async;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Locale;
@@ -68,10 +69,16 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 			@Override
 			public void failed(Throwable t) {
 				LOG.fatal("Unable to read header due to unhandled exception", t);
-				channel().closeQuietly();
+				shutdown();
 			}
 			
 		});
+	}
+
+	protected void shutdown() {
+		try {
+			channel().close();
+		} catch (IOException ignored) {		}
 	}
 
 	void handleBody(final ByteBuffer buffer) {
@@ -132,7 +139,7 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 			@Override
 			public void failed(Throwable t) {
 				LOG.fatal("Unable to write response due to unhandled exception", t);
-				channel().closeQuietly();
+				shutdown();
 			}
 		});
 	}
@@ -151,7 +158,7 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 			@Override
 			public void failed(Throwable t) {
 				LOG.fatal("Unable to write response due to unhandled exception", t);
-				channel().closeQuietly();
+				shutdown();
 			}
 		});
 	}
@@ -183,7 +190,7 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 				@Override
 				public void failed(Throwable t) {
 					LOG.fatal("Unable to read request body due to unhandled exception", t);
-					channel().closeQuietly();
+					shutdown();
 				}
 				
 			});

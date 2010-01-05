@@ -127,11 +127,8 @@ public class DavController {
 	}
 	
 	private final Response getResource(final Request request) throws IOException {
-		if (request.containsHeader(Header.IF_MATCH)) {
-			return handleRequestWithIfMatch(request);
-		} else {
-			return handleRequestWithoutIfMatch(request);
-		}
+		return request.containsHeader(Header.IF_MATCH) ?
+				handleRequestWithIfMatch(request) : handleRequestWithoutIfMatch(request);
 	}
 	
 	private Response handleRequestWithIfMatch(Request request) throws IOException {
