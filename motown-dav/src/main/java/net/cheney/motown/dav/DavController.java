@@ -207,26 +207,26 @@ public class DavController {
 
 	private Response handleRequestWithoutAccept(final Request request) {
 		if (request.containsHeader(Header.ACCEPT_LANGUAGE)) {
-			return handleRequestWithAcceptLanguage();
+			return handleRequestWithAcceptLanguage(request);
 		} else {
 			return handleRequestWithoutAcceptLanguage(request);
 		}
 	}
 
-	private Response handleRequestWithAcceptLanguage() {
-		return serverErrorNotImplemented();
+	private Response handleRequestWithAcceptLanguage(final Request request) {
+		return handleRequestWithoutAcceptLanguage(request);
 	}
 
 	private Response handleRequestWithoutAcceptLanguage(final Request request) {
 		if (request.containsHeader(Header.ACCEPT_CHARSET)) {
-			return handleRequestWithAcceptCharset();
+			return handleRequestWithAcceptCharset(request);
 		} else {
 			return handleRequestWithoutAcceptCharset(request);
 		}
 	}
 
-	private Response handleRequestWithAcceptCharset() {
-		return serverErrorNotImplemented();
+	private Response handleRequestWithAcceptCharset(final Request request) {
+		return handleRequestWithoutAcceptCharset(request);
 	}
 
 	private Response handleRequestWithoutAcceptCharset(final Request request) {
