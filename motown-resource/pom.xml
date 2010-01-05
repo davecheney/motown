@@ -23,10 +23,6 @@
 			<artifactId>snax</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>net.cheney.uri</groupId>
-			<artifactId>uri</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 		</dependency>

@@ -63,13 +63,13 @@ import net.cheney.motown.resource.api.Elements.RESPONSE;
 import net.cheney.motown.resource.api.Lock.Scope;
 import net.cheney.motown.resource.api.Lock.Type;
 import net.cheney.motown.resource.api.Resource.ComplianceClass;
+import net.cheney.motown.uri.Path;
 import net.cheney.snax.model.Document;
 import net.cheney.snax.model.Element;
 import net.cheney.snax.model.ProcessingInstruction;
 import net.cheney.snax.model.QName;
 import net.cheney.snax.parser.XMLBuilder;
 import net.cheney.snax.writer.XMLWriter;
-import net.cheney.uri.Path;
 
 import org.apache.log4j.Logger;
 

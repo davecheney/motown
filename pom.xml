@@ -142,12 +142,6 @@
 				<artifactId>junit</artifactId>
 				<version>4.7</version>
 			</dependency>
-			<dependency>
-				<groupId>net.cheney.uri</groupId>
-				<artifactId>uri</artifactId>
-				<version>0.1-SNAPSHOT</version>
-			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
