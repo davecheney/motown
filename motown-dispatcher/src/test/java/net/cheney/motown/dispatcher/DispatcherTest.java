@@ -25,7 +25,6 @@ public class DispatcherTest {
 	private TestResponseHandler responseHandler;
 	
 	public static class Get {
-		@SuppressWarnings("unused")
 		@GET
 		public Response get() {
 			return Response.successNoContent();
