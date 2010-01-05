@@ -46,10 +46,16 @@ public class HttpServerProtocol extends HttpProtocol<Request> implements HttpRes
 		CharBuffer buffer = CharBuffer.allocate(8192);
 		buffer.append(String.format("%s %s %s\r\n", response.version(), response.status().code(), response.status().reason()));
 		buffer.append(String.format("Date: %s\r\n", RFC1123_DATE_FORMAT.format(System.currentTimeMillis())));
-		if (response.hasBody()) {
-			buffer.append(String.format("Content-Length: %d\r\n", response.body().remaining()));
-		} else {
-			buffer.append("Content-Length: 0\r\n");
+		
+		// http://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging-08#section-3.4
+		// elide Content-Length header where not permitted
+		// TODO: needs unit test
+		if (response.status().mayContainBody()) {
+			if (response.hasBody()) {
+				buffer.append(String.format("Content-Length: %d\r\n", response.body().remaining()));
+			} else {
+				buffer.append("Content-Length: 0\r\n");
+			}
 		}
 		if (requestClose) {
 			buffer.append("Connection: close\r\n");
