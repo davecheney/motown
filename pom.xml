@@ -20,6 +20,12 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<scm>
+		<connection>scm:git:git://github.com/davecheney/motown.git</connection>
+		<developerConnection>scm:git:git://github.com/davecheney/motown.git</developerConnection>
+		<url>http://github.com/davecheney/motown</url>
+	</scm>
+
 	<ciManagement>
 		<system>hudson</system>
 		<url>http://hudson.cheney.net/job/motown-TRUNK/</url>

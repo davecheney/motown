@@ -3,8 +3,6 @@ package net.cheney.motown.protocol.http.async;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import net.cheney.motown.api.Message;
 import net.cheney.motown.protocol.http.common.BodyHandler;
@@ -12,7 +10,6 @@ import net.cheney.motown.protocol.http.common.HttpParser;
 import net.cheney.rev.channel.AsyncSocketChannel;
 import net.cheney.rev.protocol.Protocol;
 
-import org.apache.commons.lang.time.FastDateFormat;
 import org.apache.log4j.Logger;
 
 abstract class HttpProtocol<V extends Message> extends Protocol {
