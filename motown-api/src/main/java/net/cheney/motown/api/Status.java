@@ -2,9 +2,6 @@ package net.cheney.motown.api;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-
 public enum Status {
 		INFO_CONTINUE(100, "Continue"), 
 		INFO_SWITCHING_PROTOCOL(101, "Switching Protocols"), 
@@ -71,11 +68,6 @@ public enum Status {
 
 		public String reason() {
 			return reason;
-		}
-		
-		@Override
-		public String toString() {
-			return ReflectionToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
 		}
 		
 		public boolean isInformational() {
