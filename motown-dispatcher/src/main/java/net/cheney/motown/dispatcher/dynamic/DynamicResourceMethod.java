@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import net.cheney.motown.api.Message;
+import net.cheney.motown.api.Request;
 import net.cheney.motown.api.Response;
 import net.cheney.motown.dispatcher.ResourceMethod;
 
@@ -38,7 +39,14 @@ public class DynamicResourceMethod implements ResourceMethod {
 		return args;
 	}
 
-	public Response invoke(Object resource, Message request) {
+	public Response invoke(Object resource, Request request) {
+		LOG.info(String.format("%s %s %s %s", request.method(), request.uri(), request.version(), request.headers()));
+		Response response = invoke0(resource, request);
+		LOG.info(String.format("%s %s %s %s", response.version(), response.status().code(), response.status().reason(), response.headers()));
+		return response;
+	}
+
+	private Response invoke0(Object resource, Request request) {
 		final Object args[] = injectParameters(request);
 		try {
 			LOG.debug(String.format("Invoking %s(%s)",method.getName(),Arrays.asList(args).toString()));
@@ -52,7 +60,7 @@ public class DynamicResourceMethod implements ResourceMethod {
 		} catch (InvocationTargetException e) {
 			LOG.error(String.format("Failure Invoking %s(%s)",method.getName(),Arrays.asList(args).toString()),e);
 			return Response.serverErrorInternal();
-		}
+		}		
 	}
 
 	private final Object[] injectParameters(final Message request) {
