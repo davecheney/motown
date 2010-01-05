@@ -12,8 +12,10 @@ import net.cheney.rev.channel.AsyncSocketChannel;
 import net.cheney.rev.protocol.Protocol;
 
 import org.apache.commons.lang.time.FastDateFormat;
+import org.apache.log4j.Logger;
 
 abstract class HttpProtocol<V extends Message> extends Protocol {
+	private static final Logger LOG = Logger.getLogger(HttpProtocol.class);
 	
 	private static final int DEFAULT_BUFFER_SIZE = 8192;
 
@@ -61,6 +63,12 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 			@Override
 			public void completed() {
 				headerReceived((ByteBuffer) buffer.flip());
+			}
+			
+			@Override
+			public void failed(Throwable t) {
+				LOG.fatal("Unable to read header due to unhandled exception", t);
+				channel().closeQuietly();
 			}
 			
 		});
@@ -120,6 +128,12 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 			public void completed() {
 				channel().shutdownOutput();
 			}
+			
+			@Override
+			public void failed(Throwable t) {
+				LOG.fatal("Unable to write response due to unhandled exception", t);
+				channel().closeQuietly();
+			}
 		});
 	}
 	
@@ -132,6 +146,12 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 			@Override
 			public void completed() {
 				channel().shutdownOutput();
+			}
+			
+			@Override
+			public void failed(Throwable t) {
+				LOG.fatal("Unable to write response due to unhandled exception", t);
+				channel().closeQuietly();
 			}
 		});
 	}
@@ -158,6 +178,12 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 				@Override
 				public void completed() {
 					bodyReceived(buffer);
+				}
+				
+				@Override
+				public void failed(Throwable t) {
+					LOG.fatal("Unable to read request body due to unhandled exception", t);
+					channel().closeQuietly();
 				}
 				
 			});
