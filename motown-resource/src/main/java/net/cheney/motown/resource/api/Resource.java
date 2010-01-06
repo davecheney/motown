@@ -6,6 +6,7 @@ import static net.cheney.motown.resource.api.Elements.resourceType;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -85,6 +86,8 @@ public abstract class Resource {
 	public abstract Collection<Method> supportedMethods();
 
 	public abstract ByteBuffer entity() throws IOException;
+	
+	public abstract FileChannel channel() throws IOException;
 
 	public abstract void put(ByteBuffer entity) throws IOException;
 	

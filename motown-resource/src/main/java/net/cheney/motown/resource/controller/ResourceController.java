@@ -12,6 +12,7 @@ import static net.cheney.motown.api.Response.serverErrorInternal;
 import static net.cheney.motown.api.Response.serverErrorNotImplemented;
 import static net.cheney.motown.api.Response.successCreated;
 import static net.cheney.motown.api.Response.successNoContent;
+import static net.cheney.motown.api.Status.SUCCESS_OK;
 import static net.cheney.motown.resource.api.Elements.activeLock;
 import static net.cheney.motown.resource.api.Elements.href;
 import static net.cheney.motown.resource.api.Elements.lockDiscovery;
@@ -33,12 +34,12 @@ import java.util.List;
 
 import net.cheney.motown.api.Depth;
 import net.cheney.motown.api.Header;
+import net.cheney.motown.api.Message;
 import net.cheney.motown.api.Method;
 import net.cheney.motown.api.MimeType;
 import net.cheney.motown.api.Request;
 import net.cheney.motown.api.Response;
 import net.cheney.motown.api.Status;
-import net.cheney.motown.api.Response.Builder;
 import net.cheney.motown.dispatcher.dynamic.COPY;
 import net.cheney.motown.dispatcher.dynamic.Context;
 import net.cheney.motown.dispatcher.dynamic.DELETE;
@@ -95,7 +96,7 @@ public class ResourceController {
 	}
 
 	@GET
-	public Response get(@Context Request request) throws IOException {
+	public Message get(@Context Request request) throws IOException {
 		final Path path = Path.fromString(request.uri().getPath());
 		final Resource resource = resolveResource(path);
 		if (resource.exists()) {
@@ -105,12 +106,12 @@ public class ResourceController {
 				return getResource(request);
 			}
 		} else {
-			return Response.clientErrorNotFound();
+			return clientErrorNotFound();
 		}
 	}
 	
 	@PUT
-	public Response put(@Context Request request) throws IOException {
+	public Message put(@Context Request request) throws IOException {
 		final Path path = Path.fromString(request.uri().getPath());
 		final Resource resource = resolveResource(path);
 		if (!resource.parent().exists()) {
@@ -126,12 +127,12 @@ public class ResourceController {
 		return successCreated();
 	}
 	
-	private final Response getResource(final Request request) throws IOException {
+	private final Message getResource(final Request request) throws IOException {
 		return request.containsHeader(Header.IF_MATCH) ?
 				handleRequestWithIfMatch(request) : handleRequestWithoutIfMatch(request);
 	}
 	
-	private Response handleRequestWithIfMatch(Request request) throws IOException {
+	private Message handleRequestWithIfMatch(Request request) throws IOException {
 		final Path path = Path.fromString(request.uri().getPath());
 		final Resource resource = resolveResource(path);
 
@@ -144,7 +145,7 @@ public class ResourceController {
 		}
 	}
 	
-	private Response handleRequestWithoutIfMatch(Request request) throws IOException {
+	private Message handleRequestWithoutIfMatch(Request request) throws IOException {
 		if (request.containsHeader(Header.IF_UNMODIFIED_SINCE)) {
 			return handleRequestWithIfUnmodifiedSince();
 		} else {
@@ -152,11 +153,11 @@ public class ResourceController {
 		}
 	}
 	
-	private Response handleRequestWithIfUnmodifiedSince() {
+	private Message handleRequestWithIfUnmodifiedSince() {
 		return Response.serverErrorNotImplemented();
 	}
 
-	private Response handleRequestWithoutIfUnmodifiedSince(Request request) throws IOException {
+	private Message handleRequestWithoutIfUnmodifiedSince(Request request) throws IOException {
 		if (request.containsHeader(Header.IF_NONE_MATCH)) {
 			return handleRequestWithIfNoneMatch();
 		} else {
@@ -164,11 +165,11 @@ public class ResourceController {
 		}
 	}
 	
-	private Response handleRequestWithIfNoneMatch() {
+	private Message handleRequestWithIfNoneMatch() {
 		return serverErrorNotImplemented();
 	}
 
-	private Response handleRequestWithoutIfNoneMatch(Request request) throws IOException {
+	private Message handleRequestWithoutIfNoneMatch(Request request) throws IOException {
 		if (request.containsHeader(Header.IF_MODIFIED_SINCE)) {
 			return handleRequestWithIfModifiedSince(request);
 		} else {
@@ -176,7 +177,7 @@ public class ResourceController {
 		}
 	}
 	
-	private Response handleRequestWithoutIfModifiedSince(final Request request) throws IOException {
+	private Message handleRequestWithoutIfModifiedSince(final Request request) throws IOException {
 		switch (request.method()) {
 		case POST:
 
@@ -198,11 +199,11 @@ public class ResourceController {
 		}
 	}
 	
-	private Response handleRequestWithAccept(final Request request) {
+	private Message handleRequestWithAccept(final Request request) {
 		return handleRequestWithoutAccept(request);
 	}
 
-	private Response handleRequestWithoutAccept(final Request request) {
+	private Message handleRequestWithoutAccept(final Request request) {
 		if (request.containsHeader(Header.ACCEPT_LANGUAGE)) {
 			return handleRequestWithAcceptLanguage(request);
 		} else {
@@ -210,11 +211,11 @@ public class ResourceController {
 		}
 	}
 
-	private Response handleRequestWithAcceptLanguage(final Request request) {
+	private Message handleRequestWithAcceptLanguage(final Request request) {
 		return handleRequestWithoutAcceptLanguage(request);
 	}
 
-	private Response handleRequestWithoutAcceptLanguage(final Request request) {
+	private Message handleRequestWithoutAcceptLanguage(final Request request) {
 		if (request.containsHeader(Header.ACCEPT_CHARSET)) {
 			return handleRequestWithAcceptCharset(request);
 		} else {
@@ -222,11 +223,23 @@ public class ResourceController {
 		}
 	}
 
-	private Response handleRequestWithAcceptCharset(final Request request) {
+	private Message handleRequestWithAcceptCharset(final Request request) {
 		return handleRequestWithoutAcceptCharset(request);
 	}
 
-	private Response handleRequestWithoutAcceptCharset(final Request request) {
+	private Message handleRequestWithoutAcceptCharset(final Request request) {
+		if(request.containsHeader(Header.RANGE)) {
+			return handleRequestWithRange(request);
+		} else {
+			return handleRequestWithoutRange(request);
+		}
+	}
+
+	private Message handleRequestWithRange(Request request) {
+		return serverErrorNotImplemented();
+	}
+
+	private Message handleRequestWithoutRange(Request request) {
 		final Path path = Path.fromUri(request.uri());
 		final Resource resource = resolveResource(path);
 		
@@ -237,7 +250,7 @@ public class ResourceController {
 		}
 	}
 
-	private Response handleRequestWithIfModifiedSince(final Request request) throws IOException {
+	private Message handleRequestWithIfModifiedSince(final Request request) throws IOException {
 		final Path path = Path.fromUri(request.uri());
 		final Resource resource = resolveResource(path);
 
@@ -256,7 +269,7 @@ public class ResourceController {
 	}
 	
 	@DELETE
-	public Response delete(@Context Request request) throws IOException {
+	public Message delete(@Context Request request) throws IOException {
 		final Path path = Path.fromUri(request.uri());
 		final Resource resource = resolveResource(path);
 		
@@ -283,7 +296,7 @@ public class ResourceController {
 	}
 	
 	@LOCK
-	public Response lock(@Context Request request) throws IOException {
+	public Message lock(@Context Request request) throws IOException {
 		final Path path = Path.fromUri(request.uri());
 		final Resource resource = resolveResource(path);
 
@@ -294,21 +307,20 @@ public class ResourceController {
 			final Element lockDiscovery = lockDiscovery(activelock);
 			final Element prop = prop(lockDiscovery);
 			final Document doc = new Document(ProcessingInstruction.XML_DECLARATION, prop);
-			Builder builder = Response.builder(Status.SUCCESS_OK);
-			builder.setHeader(Header.LOCK_TOKEN, "<" + lock.token() + ">");
-			builder.setBody(Charset.defaultCharset().encode(XMLWriter.write(doc)));
-			return builder.build();
+			return Response.build(SUCCESS_OK)
+				.header(Header.LOCK_TOKEN).set("<" + lock.token() + ">")
+				.setBody(Charset.defaultCharset().encode(XMLWriter.write(doc)));
 		} else {
 			return clientErrorNotFound();
 		}
 	}
 	
 	@OPTIONS
-	public Response options(@Context Request request) {
+	public Message options(@Context Request request) {
 		final Path path = Path.fromString(request.uri().getPath());
 		final Resource resource = resolveResource(path);
 
-		Response response = Response.successNoContent();
+		Message response = Response.successNoContent();
 		for(Method method : resource.supportedMethods()) {
 			response.headers().put(Header.ALLOW, method.name());
 		}
@@ -321,7 +333,7 @@ public class ResourceController {
 	}
 	
 	@UNLOCK
-	public Response unlock(@Context Request request) throws IOException {
+	public Message unlock(@Context Request request) throws IOException {
 		final Path path = Path.fromString(request.uri().getPath());
 		final Resource resource = resolveResource(path);
 		
@@ -338,7 +350,7 @@ public class ResourceController {
 	}
 	
 	@MOVE
-	public Response move(@Context Request request) throws IOException {
+	public Message move(@Context Request request) throws IOException {
 		final Path path = Path.fromString(request.uri().getPath());
 		final Resource source = resolveResource(path);
 
@@ -395,7 +407,7 @@ public class ResourceController {
 	}
 
 	@COPY
-	public Response copy(@Context Request request) throws IOException {
+	public Message copy(@Context Request request) throws IOException {
 		final Path path = Path.fromString(request.uri().getPath());
 		final Resource source = resolveResource(path);
 
@@ -451,12 +463,12 @@ public class ResourceController {
 		}
 	}
 
-	private Response copyResourceToResource(final Resource source, final Resource destination, final boolean overwrite) throws IOException {
+	private Message copyResourceToResource(final Resource source, final Resource destination, final boolean overwrite) throws IOException {
 		source.copyTo(destination);
 		return successNoContent();
 	}
 
-	private Response copyResourceToCollection(final Resource source, final Resource destination, final boolean overwrite) throws IOException {
+	private Message copyResourceToCollection(final Resource source, final Resource destination, final boolean overwrite) throws IOException {
 		if (overwrite) {
 			destination.delete();
 		}
@@ -464,22 +476,22 @@ public class ResourceController {
 		return overwrite ? successNoContent() : successCreated();
 	}
 
-	private Response copyCollectionToResource(final Resource source, final Resource destination, final boolean overwrite) throws IOException {
+	private Message copyCollectionToResource(final Resource source, final Resource destination, final boolean overwrite) throws IOException {
 		source.copyTo(destination);
 		return successNoContent();
 	}
 
-	private Response copyCollectionToCollection(final Resource source, final Resource destination, final boolean overwrite) throws IOException {
+	private Message copyCollectionToCollection(final Resource source, final Resource destination, final boolean overwrite) throws IOException {
 		source.copyTo(destination);
 		return successNoContent();
 	}
 	
-	private Response moveResourceToResource(final Resource source, final Resource destination, final boolean overwrite) throws IOException {
+	private Message moveResourceToResource(final Resource source, final Resource destination, final boolean overwrite) throws IOException {
 		source.moveTo(destination);
 		return successNoContent();
 	}
 
-	private Response moveResourceToCollection(final Resource source, final Resource destination, final boolean overwrite) throws IOException {
+	private Message moveResourceToCollection(final Resource source, final Resource destination, final boolean overwrite) throws IOException {
 		if (overwrite) {
 			destination.delete();
 		}
@@ -487,18 +499,18 @@ public class ResourceController {
 		return overwrite ? successNoContent() : successCreated();
 	}
 
-	private Response moveCollectionToResource(final Resource source, final Resource destination, final boolean overwrite) throws IOException {
+	private Message moveCollectionToResource(final Resource source, final Resource destination, final boolean overwrite) throws IOException {
 		source.moveTo(destination);
 		return successNoContent();
 	}
 
-	private Response moveCollectionToCollection(final Resource source, final Resource destination, final boolean overwrite) throws IOException {
+	private Message moveCollectionToCollection(final Resource source, final Resource destination, final boolean overwrite) throws IOException {
 		source.moveTo(destination);
 		return successNoContent();
 	}
 	
 	@MKCOL
-	public Response mkcol(@Context Request request) {
+	public Message mkcol(@Context Request request) {
 		final Path path = Path.fromString(request.uri().getPath());
 		final Resource resource = resolveResource(path);
 		
@@ -519,7 +531,7 @@ public class ResourceController {
 	}
 	
 	@PROPPATCH
-	public Response proppatch(@Context Request request) throws IOException {
+	public Message proppatch(@Context Request request) throws IOException {
 		final Path path = Path.fromString(request.uri().getPath());
 		final Resource resource = resolveResource(path);
 		final Iterable<QName> properties = getProperties(request.body());
@@ -527,17 +539,17 @@ public class ResourceController {
 		return successMultiStatus(multistatus(responses));
 	}
 
-	private Response successMultiStatus(MULTISTATUS multiStatus) {
+	private Message successMultiStatus(MULTISTATUS multiStatus) {
 		final Document doc = new Document(ProcessingInstruction.XML_DECLARATION, multiStatus);
 		return new Response(Status.SUCCESS_MULTI_STATUS, ArrayListMultimap.<Header, String>create(), CHARSET_UTF_8.encode(XMLWriter.write(doc)));
 	}
 
 	@PROPFIND
-	public Response propfind(@Context Request request) throws IOException {
+	public Message propfind(@Context Request request) throws IOException {
 		return propfind(Path.fromString(request.uri().getPath()), request.getDepth(Depth.INFINITY), request.body());
 	}
 
-	private Response propfind(Path path, Depth depth, ByteBuffer body) throws IOException {
+	private Message propfind(Path path, Depth depth, ByteBuffer body) throws IOException {
 		final Resource resource = resolveResource(path);
 
 			final Iterable<QName> properties = getProperties(body);

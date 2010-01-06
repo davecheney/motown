@@ -1,17 +1,27 @@
 package net.cheney.motown.api;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
+import static java.lang.Integer.parseInt;
+import static net.cheney.motown.api.Header.CONNECTION;
+import static net.cheney.motown.api.Header.CONTENT_LENGTH;
+import static net.cheney.motown.api.Header.TRANSFER_ENCODING;
+
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.util.Iterator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 public abstract class Message {
 
 	private final Multimap<Header, String> headers;
-	private final ByteBuffer body;
+	private ByteBuffer body;
+	private FileChannel channel;
 	
 	public enum TransferCoding { NONE, CHUNKED };
 	
@@ -21,10 +31,37 @@ public abstract class Message {
 		
 		String value();
 	}
+	
+	public class HeaderAccessor<V extends Message> implements Iterable<String> {
+
+		private final Header header;
+
+		public HeaderAccessor(Header header) {
+			this.header = header;
+		}
+
+		@SuppressWarnings("unchecked")
+		public V set(String value) {
+			headers().replaceValues(header, Lists.newArrayList(value));
+			return (V) Message.this;
+		}
+
+		public Iterator<String> iterator() {
+			return headers().values().iterator();
+		}
+
+	}
 
 	Message(@Nonnull Multimap<Header, String> headers, @Nullable ByteBuffer body) {
 		this.headers = headers;
 		this.body = body;
+		this.channel = null;
+	}
+	
+	Message(@Nonnull Multimap<Header, String> headers, @Nullable FileChannel channel) {
+		this.headers = headers;
+		this.body = null;
+		this.channel = channel;
 	}
 	
 	public abstract Version version();
@@ -33,51 +70,64 @@ public abstract class Message {
 		return headers;
 	}
 	
-	public abstract Message setBody(ByteBuffer body);
+	@SuppressWarnings("unchecked")
+	public <V extends Message> V setBody(ByteBuffer body) {
+		this.body = body;
+		if(this.channel != null) {
+			try {
+				channel.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		this.channel = null;
+		return (V) this;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <V extends Message> V setBody(FileChannel channel) {
+		this.channel = channel;
+		this.body = null;
+		return (V) this;
+	}
 
 	public final ByteBuffer body() {
 		return body;
 	}
 	
 	public final boolean hasBody() {
-		return body != null ? body.hasRemaining() : false;
+		if(body != null) {
+			return body.hasRemaining();
+		} else if (hasChannel()) {
+			return true;
+		} else { 
+			return false;
+		}
 	}
 	
-	public TransferCoding transferCoding() {
-		return "chunked".equalsIgnoreCase(getOnlyElement(Header.TRANSFER_ENCODING)) ? TransferCoding.CHUNKED : TransferCoding.NONE;
-	}
-	
-	private String getOnlyElement(Header header) {
-		return getOnlyElement(header, null);
+	public final boolean hasChannel() {
+		return channel != null;
 	}
 
+	public TransferCoding transferCoding() {
+		return "chunked".equalsIgnoreCase(getOnlyElement(header(TRANSFER_ENCODING), null)) ? TransferCoding.CHUNKED : TransferCoding.NONE;
+	}
+	
 	public final int contentLength() {
-		return Integer.parseInt(Iterables.getOnlyElement(headers().get(Header.CONTENT_LENGTH), "0"));
+		return parseInt(getOnlyElement(header(CONTENT_LENGTH), "0"));
 	}
 	
 	public boolean closeRequested() {
-		return "close".equals(Iterables.getOnlyElement(headers().get(Header.CONNECTION), ""));
+		return "close".equals(getOnlyElement(header(CONNECTION), ""));
 	}
 
 	public final boolean containsHeader(Header header) {
 		return headers().containsKey(header);
 	}
 	
-	protected String getOnlyElement(Header header, String defaultValue) {
-		return Iterables.getOnlyElement(headers().get(header), defaultValue);
+	public <V extends Message> HeaderAccessor<V> header(final Header header) {
+		return new HeaderAccessor<V>(header);
 	}
 
-	public abstract static class Builder {
-		
-		public abstract Message build();
-		
-		abstract Version version();
-		
-		abstract Multimap<Header, String> headers();
-		
-		abstract ByteBuffer body();
-
-		public abstract Builder setBody(ByteBuffer buffer);
-
-	}
 }

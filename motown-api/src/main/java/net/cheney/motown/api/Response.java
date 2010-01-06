@@ -1,6 +1,7 @@
 package net.cheney.motown.api;
 
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -14,17 +15,25 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import static net.cheney.motown.api.Status.*;
 
-public class Response extends Message {
+public final class Response extends Message {
+
+	protected static final FastDateFormat RFC1123_DATE_FORMAT = FastDateFormat.getInstance("EEE, dd MMM yyyy HH:mm:ss zzz", TimeZone.getTimeZone("GMT"), Locale.US);
 	
-	private final StatusLine statusLine;
+	protected final StatusLine statusLine;
 
 	private Response(StatusLine statusLine, Multimap<Header, String> headers, ByteBuffer body) {
+		super(headers, body);
+		header(Header.DATE).set(RFC1123_DATE_FORMAT.format(System.currentTimeMillis()));
+		this.statusLine = statusLine;
+	}
+	
+	private Response(StatusLine statusLine, Multimap<Header, String> headers, FileChannel body) {
 		super(headers, body);
 		this.statusLine = statusLine;
 	}
 
-	public Response(Status status) {
-		this(new StatusLine(Version.HTTP_1_1, status), ArrayListMultimap.<Header, String>create(), ByteBuffer.allocate(0));
+	public static Response build(Status status) {
+		return new Response(new StatusLine(Version.HTTP_1_1, status), ArrayListMultimap.<Header, String>create(), ByteBuffer.allocate(0));
 	}
 	
 	public Response(Status status, Multimap<Header, String> headers, ByteBuffer body) {
@@ -38,10 +47,6 @@ public class Response extends Message {
 	@Override
 	public Version version() {
 		return this.statusLine.version();
-	}
-	
-	public static Builder builder(Status status) {
-		return new Builder(status);
 	}
 	
 	@Override
@@ -58,114 +63,53 @@ public class Response extends Message {
 		return HashCodeBuilder.reflectionHashCode(this);
 	}
 	
-	public static class Builder extends Message.Builder {
-		
-		protected static final FastDateFormat RFC1123_DATE_FORMAT = FastDateFormat.getInstance("EEE, dd MMM yyyy HH:mm:ss zzz", TimeZone.getTimeZone("GMT"), Locale.US);
-
-		private Multimap<Header, String> headers;
-		private ByteBuffer body = null;
-		private final Status status;
-
-		private Builder(Status status) {
-			headers = ArrayListMultimap.create();
-			setHeader(Header.DATE, RFC1123_DATE_FORMAT.format(System.currentTimeMillis()));
-			this.status = status;
-		}
-		
-		Status status() {
-			return status;
-		}
-		
-		@Override
-		Version version() {
-			return Version.HTTP_1_1;
-		}
-		
-		@Override
-		Multimap<Header, String> headers() {
-			return headers;
-		}
-		
-		@Override
-		ByteBuffer body() {
-			return body;
-		}
-
-		@Override
-		public Response build() {
-			return new Response(status(), headers(), body());
-		}
-
-		public Builder setHeader(Header key, String value) {
-			headers().put(key, value);
-			return this;
-		}
-
-		@Override
-		public Builder setBody(ByteBuffer buffer) {
-			this.body = buffer;
-			return this;
-		}
-		
-	}
-	
-	@Override
-	public Response setBody(final ByteBuffer body) {
-		return new Builder(status()) {
-			@Override
-			ByteBuffer body() {
-				return body;
-			}
-		}.build();
-	}
-	
 	public static Response successCreated() {
-		return Response.builder(Status.SUCCESS_CREATED).build();
+		return Response.build(Status.SUCCESS_CREATED);
 	}
 	
 	public static Response successNoContent() {
-		return Response.builder(Status.SUCCESS_NO_CONTENT).build();
+		return Response.build(Status.SUCCESS_NO_CONTENT);
 	}
 
 	public static Response serverErrorInternal() {
-		return Response.builder(Status.SERVER_ERROR_INTERNAL).build();
+		return Response.build(Status.SERVER_ERROR_INTERNAL);
 	}
 
 	public static Response serverErrorNotImplemented() {
-		return Response.builder(Status.SERVER_ERROR_NOT_IMPLEMENTED).build();
+		return Response.build(Status.SERVER_ERROR_NOT_IMPLEMENTED);
 	}
 
-	public static Response clientErrorNotFound() {
-		return Response.builder(CLIENT_ERROR_NOT_FOUND).build();
+	public static Message clientErrorNotFound() {
+		return Response.build(CLIENT_ERROR_NOT_FOUND);
 	}
 
-	public static Response clientErrorPreconditionFailed() {
-		return Response.builder(CLIENT_ERROR_PRECONDITION_FAILED).build();
+	public static Message clientErrorPreconditionFailed() {
+		return Response.build(CLIENT_ERROR_PRECONDITION_FAILED);
 	}
 	
-	public static Response clientErrorMethodNotAllowed() {
-		return Response.builder(CLIENT_ERROR_METHOD_NOT_ALLOWED).build();
+	public static Message clientErrorMethodNotAllowed() {
+		return Response.build(CLIENT_ERROR_METHOD_NOT_ALLOWED);
 	}
 	
-	public static Response clientErrorConflict() {
-		return Response.builder(CLIENT_ERROR_CONFLICT).build();
+	public static Message clientErrorConflict() {
+		return Response.build(CLIENT_ERROR_CONFLICT);
 	}
 	
-	public static Response clientErrorLocked() {
-		return Response.builder(CLIENT_ERROR_LOCKED).build();
+	public static Message clientErrorLocked() {
+		return Response.build(CLIENT_ERROR_LOCKED);
 	}
 
-	public static Response clientErrorUnsupportedMediaType() {
-		return Response.builder(CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE).build();
+	public static Message clientErrorUnsupportedMediaType() {
+		return Response.build(CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE);
 	}
 	
-	public static Response redirectionNotModified() {
-		return Response.builder(Status.REDIRECTION_NOT_MODIFIED).build();
+	public static Message redirectionNotModified() {
+		return Response.build(Status.REDIRECTION_NOT_MODIFIED);
 	}
 	
 
-	public static Response success(MimeType mime, ByteBuffer buffer) {
-		return Response.builder(SUCCESS_OK).setHeader(Header.CONTENT_TYPE, mime.toString()).setBody(buffer).build();
+	public static Message success(MimeType mime, ByteBuffer buffer) {
+		return Response.build(SUCCESS_OK).header(Header.CONTENT_TYPE).set(mime.toString()).setBody(buffer);
 	}
 
 	public boolean mayContainBody() {

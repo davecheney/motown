@@ -1,7 +1,11 @@
 package net.cheney.motown.dispatcher;
 
+import static net.cheney.motown.api.Version.HTTP_1_1;
 import static org.junit.Assert.assertEquals;
 
+import java.net.URISyntaxException;
+
+import net.cheney.motown.api.Message;
 import net.cheney.motown.api.Method;
 import net.cheney.motown.api.Request;
 import net.cheney.motown.api.Response;
@@ -26,7 +30,7 @@ public class DispatcherTest {
 	
 	public static class Get {
 		@GET
-		public Response get() {
+		public Message get() {
 			return Response.successNoContent();
 		}
 	}
@@ -71,8 +75,8 @@ public class DispatcherTest {
 	}
 	
 	@Test
-	public void testGET() {
-		Request request = Request.builder(Method.GET, "/").build();
+	public void testGET() throws URISyntaxException {
+		Request request = new Request(Method.GET, "/", HTTP_1_1);
 		dispatcher.handleRequest(request, responseHandler);
 		Response response = responseHandler.getResponse();
 		
@@ -80,8 +84,8 @@ public class DispatcherTest {
 	}
 	
 	@Test
-	public void testNotImplemented() {
-		Request request = Request.builder(Method.PUT, "/").build();
+	public void testNotImplemented() throws URISyntaxException {
+		Request request = new Request(Method.PUT, "/", HTTP_1_1);
 		dispatcher.handleRequest(request, responseHandler);
 		Response response = responseHandler.getResponse();
 		

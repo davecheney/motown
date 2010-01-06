@@ -41,8 +41,7 @@ public class FileResource extends Resource {
 	}
 
 	public ByteBuffer entity() throws IOException {
-		FileInputStream fis = new FileInputStream(file());
-		FileChannel fc = fis.getChannel();
+		FileChannel fc = channel();
 		try {
 			return fc.map(MapMode.READ_ONLY, 0, fc.size());
 		} finally {
@@ -170,6 +169,11 @@ public class FileResource extends Resource {
 
 	public FileResourceProvidor providor() {
 		return providor;
+	}
+
+	@Override
+	public FileChannel channel() throws IOException {
+		return new FileInputStream(file()).getChannel();
 	}
 
 }

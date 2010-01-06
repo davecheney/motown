@@ -1,7 +1,11 @@
 package net.cheney.motown.dispatcher.dynamic;
 
+import static net.cheney.motown.api.Version.HTTP_1_1;
 import static org.junit.Assert.assertTrue;
 
+import java.net.URISyntaxException;
+
+import net.cheney.motown.api.Message;
 import net.cheney.motown.api.Method;
 import net.cheney.motown.api.Request;
 import net.cheney.motown.api.Response;
@@ -23,7 +27,7 @@ public class DynamicResourceHandlerTest {
 			
 			@SuppressWarnings("unused")
 			@GET
-			public Response get() {
+			public Message get() {
 				return Response.successNoContent();
 			}
 		});
@@ -35,16 +39,16 @@ public class DynamicResourceHandlerTest {
 	}
 	
 	@Test
-	public void testGET() {
-		Request request = Request.builder(Method.GET, "/").build();
+	public void testGET() throws URISyntaxException {
+		Request request = new Request(Method.GET, "/", HTTP_1_1);
 		Response response = handler.dispatch(request);
 		
 		assertTrue(response.status().equals(Status.SUCCESS_NO_CONTENT));
 	}
 	
 	@Test
-	public void testNotImplemented() {
-		Request request = Request.builder(Method.PUT, "/").build();
+	public void testNotImplemented() throws URISyntaxException {
+		Request request = new Request(Method.PUT, "/", HTTP_1_1);
 		Response response = handler.dispatch(request);
 		
 		assertTrue(response.status().equals(Status.SERVER_ERROR_NOT_IMPLEMENTED));
