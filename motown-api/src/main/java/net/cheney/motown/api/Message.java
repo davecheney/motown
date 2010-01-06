@@ -15,6 +15,7 @@ import java.util.Iterator;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
@@ -63,6 +64,14 @@ public abstract class Message {
 
 		private Collection<String> get() {
 			return headers().get(header);
+		}
+		
+		public String getOnlyElement() {
+			return Iterables.getOnlyElement(get());
+		}
+		
+		public String getOnlyElementWithDefault(String defaultValue) {
+			return Iterables.getOnlyElement(get(), defaultValue);
 		}
 
 	}
@@ -126,7 +135,7 @@ public abstract class Message {
 	}
 
 	public TransferCoding transferCoding() {
-		return "chunked".equalsIgnoreCase(getOnlyElement(header(TRANSFER_ENCODING), null)) ? TransferCoding.CHUNKED : TransferCoding.NONE;
+		return "chunked".equalsIgnoreCase(header(TRANSFER_ENCODING).getOnlyElementWithDefault(null)) ? TransferCoding.CHUNKED : TransferCoding.NONE;
 	}
 	
 	public final int contentLength() {
@@ -134,7 +143,7 @@ public abstract class Message {
 	}
 	
 	public boolean closeRequested() {
-		return "close".equals(getOnlyElement(header(CONNECTION), ""));
+		return "close".equals(header(CONNECTION).getOnlyElementWithDefault(""));
 	}
 
 	public final boolean containsHeader(Header header) {
