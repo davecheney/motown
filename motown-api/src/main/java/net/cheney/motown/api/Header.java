@@ -80,15 +80,15 @@ public enum Header implements Message.HttpHeader {
 	
 	static {
 		for(Header header : Header.values()) {
-			HTTP_HEADER_MAP.put(header.name, header);
+			HTTP_HEADER_MAP.put(header.value, header);
 		}
 	}
 	
-	private final String name;
+	private final String value;
 	private final Header.Type type;
 	
 	private Header(@Nonnull String name, @Nonnull Header.Type type) {
-		this.name = name;
+		this.value = name;
 		this.type = type;
 	}
 	
@@ -101,7 +101,12 @@ public enum Header implements Message.HttpHeader {
 	}
 	
 	public final String value() {
-		return name;
+		return value;
+	}
+	
+	@Override
+	public String toString() {
+		return value();
 	}
 	
 }
