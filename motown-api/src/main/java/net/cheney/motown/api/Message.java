@@ -33,48 +33,6 @@ public abstract class Message {
 		
 		String value();
 	}
-	
-	public class HeaderAccessor<V extends Message> implements Iterable<String> {
-
-		private final Header header;
-
-		public HeaderAccessor(Header header) {
-			this.header = header;
-		}
-
-		@SuppressWarnings("unchecked")
-		public V set(String value) {
-			headers().replaceValues(header, Lists.newArrayList(value));
-			return (V) Message.this;
-		}
-
-		public Iterator<String> iterator() {
-			return get().iterator();
-		}
-		
-		@Override
-		public String toString() {
-			return String.format("%s: {%s=%s}", super.toString(), header, get()); 
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			return obj.equals(get());
-		}
-
-		private Collection<String> get() {
-			return headers().get(header);
-		}
-		
-		public String getOnlyElement() {
-			return Iterables.getOnlyElement(get());
-		}
-		
-		public String getOnlyElementWithDefault(String defaultValue) {
-			return Iterables.getOnlyElement(get(), defaultValue);
-		}
-
-	}
 
 	Message(@Nonnull Multimap<Header, String> headers, @Nullable ByteBuffer body) {
 		this.headers = headers;
@@ -154,4 +112,47 @@ public abstract class Message {
 		return new HeaderAccessor<V>(header);
 	}
 
+	
+	public class HeaderAccessor<V extends Message> implements Iterable<String> {
+
+		private final Header header;
+
+		public HeaderAccessor(Header header) {
+			this.header = header;
+		}
+
+		@SuppressWarnings("unchecked")
+		public V set(String value) {
+			headers().replaceValues(header, Lists.newArrayList(value));
+			return (V) Message.this;
+		}
+
+		public Iterator<String> iterator() {
+			return get().iterator();
+		}
+		
+		@Override
+		public String toString() {
+			return String.format("%s: {%s=%s}", super.toString(), header, get()); 
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			return obj.equals(get());
+		}
+
+		private Collection<String> get() {
+			return headers().get(header);
+		}
+		
+		public String getOnlyElement() {
+			return Iterables.getOnlyElement(get());
+		}
+		
+		public String getOnlyElementWithDefault(String defaultValue) {
+			return Iterables.getOnlyElement(get(), defaultValue);
+		}
+
+	}
+	
 }
