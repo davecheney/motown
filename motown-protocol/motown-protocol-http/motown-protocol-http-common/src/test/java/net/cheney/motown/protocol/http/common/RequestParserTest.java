@@ -8,9 +8,15 @@ import net.cheney.motown.api.Header;
 import net.cheney.motown.api.Method;
 import net.cheney.motown.api.Request;
 
+import static net.cheney.motown.api.Header.CONNECTION;
+import static net.cheney.motown.api.Header.HOST;
+import static net.cheney.motown.api.Method.OPTIONS;
+import static net.cheney.motown.api.Method.PROPFIND;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.google.common.collect.Lists;
 
 public class RequestParserTest {
 
@@ -26,6 +32,8 @@ public class RequestParserTest {
 		Request r = parser.parse("GET / HTTP/1.1\r\nHost: localhost:8080\r\nConnection: keep-alive\r\n\r\n");
 		assertEquals(r.method(), Method.GET);
 		assertEquals(r.uri(), URI.create("/"));
+		assertEquals(r.header(CONNECTION), Lists.newArrayList("keep-alive"));
+		assertEquals(r.header(HOST), Lists.newArrayList("localhost:8080"));
 		assertFalse(r.closeRequested());
 	}
 	
@@ -42,7 +50,7 @@ public class RequestParserTest {
 		parser.reset();
 		Request propfind = parser.parse(buffer);
 		
-		assertTrue(options.method().equals(Method.OPTIONS));
+		assertEquals(options.method(), OPTIONS);
 		assertTrue(options.headers().containsKey(Header.HOST));
 		assertTrue(options.headers().containsKey(Header.USER_AGENT));
 		assertTrue(options.headers().containsKey(Header.KEEP_ALIVE));
@@ -62,7 +70,7 @@ public class RequestParserTest {
 		String request = "PROPFIND /Puppet%20&%20Atlassian.key HTTP/1.1\r\nHost: localhost:8080\r\nUser-Agent: WebDAVFS/1.8 (01808000) Darwin/10.2.0 (i386)\r\nAccept: */*\r\nContent-Type: text/xml\r\nDepth: 0\r\nContent-Length: 161\r\nConnection: keep-alive\r\n\r\n";
 		Request propfind = parser.parse(request);
 		
-		assertEquals(propfind.method(), Method.PROPFIND);
+		assertEquals(propfind.method(), PROPFIND);
 		assertEquals(propfind.uri().getPath(), "/Puppet & Atlassian.key");
 	}
 }

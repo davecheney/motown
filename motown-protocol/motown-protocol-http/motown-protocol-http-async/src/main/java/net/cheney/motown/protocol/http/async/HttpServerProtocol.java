@@ -59,8 +59,8 @@ public class HttpServerProtocol extends HttpProtocol<Request> implements HttpRes
 		if (requestClose) {
 			buffer.append("Connection: close\r\n");
 		}
-		for(Entry<Header, Collection<String>> header : response.headers().asMap().entrySet()) {
-			buffer.append(String.format("%s: %s\r\n", header.getKey().value(), StringUtils.join(header.getValue(), ',')));
+		for(Header header : response.headers().keySet()) {
+			buffer.append(String.format("%s: %s\r\n", header.value(), StringUtils.join(response.header(header).iterator(), ',')));
 		}
 		buffer.append("\r\n");
 		return US_ASCII.encode((CharBuffer)buffer.flip());

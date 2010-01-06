@@ -9,6 +9,7 @@ import static net.cheney.motown.api.Header.TRANSFER_ENCODING;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Collection;
 import java.util.Iterator;
 
 import javax.annotation.Nonnull;
@@ -47,7 +48,21 @@ public abstract class Message {
 		}
 
 		public Iterator<String> iterator() {
-			return headers().values().iterator();
+			return get().iterator();
+		}
+		
+		@Override
+		public String toString() {
+			return String.format("%s: {%s=%s}", super.toString(), header, get()); 
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			return obj.equals(get());
+		}
+
+		private Collection<String> get() {
+			return headers().get(header);
 		}
 
 	}
