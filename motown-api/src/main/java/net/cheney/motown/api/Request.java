@@ -1,6 +1,7 @@
 package net.cheney.motown.api;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -21,7 +22,7 @@ public class Request extends Message {
 		this.requestLine = requestLine;
 	}
 	
-	public Request(Method method, String uri, Version version) {
+	public Request(Method method, String uri, Version version) throws URISyntaxException {
 		this(new RequestLine(method, uri, version));
 	}
 	

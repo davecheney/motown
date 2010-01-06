@@ -46,7 +46,7 @@ public class RequestParser extends HttpParser<Request> {
 			case REQUEST_LINE:
 				RequestLine requestLine = requestLineParser.parse(buffer);
 				if(requestLine != null) {
-					request = new Request(requestLine) {};
+					request = new Request(requestLine);
 					offset = buffer.position();
 					stateStack.pop();
 				}

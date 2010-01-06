@@ -1,6 +1,7 @@
 package net.cheney.motown.protocol.http.common;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
@@ -109,7 +110,12 @@ public class RequestLineParser extends HttpParser<RequestLine> {
 			case REQUEST_LINE_END:
 				switch (buffer.get()) {
 				case '\n':
-					return new RequestLine(method, url, version);
+					try {
+						return new RequestLine(method, url, version);
+					} catch (URISyntaxException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
 				default:
 					throw new IllegalArgumentException(

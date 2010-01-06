@@ -1,5 +1,6 @@
 package net.cheney.motown.uri;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
@@ -17,6 +18,10 @@ public abstract class Path implements Comparable<Path>, Enumerable<String> {
 	
 	public static Path fromString(String string) {
 		return builder().addElement(StringUtils.split(string, SEPERATOR)).build();
+	}
+	
+	public static Path fromUri(URI uri) {
+		return fromString(uri.getPath());
 	}
 	
 	public static class Builder {

@@ -56,4 +56,13 @@ public class RequestParserTest {
 //		assertTrue(propfind.contentLength() == 121);
 
 	}
+	
+	@Test 
+	public void testRequestWithEncodedSpaces() {
+		String request = "PROPFIND /Puppet%20&%20Atlassian.key HTTP/1.1\r\nHost: localhost:8080\r\nUser-Agent: WebDAVFS/1.8 (01808000) Darwin/10.2.0 (i386)\r\nAccept: */*\r\nContent-Type: text/xml\r\nDepth: 0\r\nContent-Length: 161\r\nConnection: keep-alive\r\n\r\n";
+		Request propfind = parser.parse(request);
+		
+		assertEquals(propfind.method(), Method.PROPFIND);
+		assertEquals(propfind.uri().getPath(), "/Puppet & Atlassian.key");
+	}
 }

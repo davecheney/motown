@@ -1,6 +1,7 @@
 package net.cheney.motown.api;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -17,10 +18,15 @@ public final class RequestLine extends StartLine {
 	private final Method method;
 	private final URI uri;
 	
-	public RequestLine(@Nonnull Method method, @Nonnull String uri, @Nonnull Version version) {
-		this(method, URI.create(uri), version);
+	public RequestLine(@Nonnull Method method, @Nonnull String uri, @Nonnull Version version) throws URISyntaxException {
+		this(method, uriFromString(uri), version);
 	}
 	
+	private static URI uriFromString(String uri) throws URISyntaxException {
+		return new URI(null, null, uri, null);
+//		return URI.create(uri);
+	}
+
 	public RequestLine(@Nonnull Method method, @Nonnull URI uri, @Nonnull Version version) {
 		super(version);
 		this.method = method;
