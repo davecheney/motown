@@ -5,7 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-public enum Header implements Message.HttpHeader {
+public enum Header {
 	
 	ACCEPT("Accept", Type.REQUEST),
 	ACCEPT_RANGES("Accept-Ranges", Type.RESPONSE),

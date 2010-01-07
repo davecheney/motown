@@ -21,16 +21,15 @@ public final class RequestLine extends StartLine {
 	public RequestLine(@Nonnull Method method, @Nonnull String uri, @Nonnull Version version) throws URISyntaxException {
 		this(method, uriFromString(uri), version);
 	}
-	
-	private static URI uriFromString(String uri) throws URISyntaxException {
-		return new URI(null, null, uri, null);
-//		return URI.create(uri);
-	}
 
 	public RequestLine(@Nonnull Method method, @Nonnull URI uri, @Nonnull Version version) {
 		super(version);
 		this.method = method;
 		this.uri = uri;
+	}
+	
+	private static URI uriFromString(String uri) throws URISyntaxException {
+		return new URI(null, null, uri, null);
 	}
 
 	public Method method() {

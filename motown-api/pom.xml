@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.cheney.motown</groupId>
 	<artifactId>motown-api</artifactId>
-	
+
 	<name>Motown API</name>
 
 	<dependencies>
@@ -21,6 +21,10 @@
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>

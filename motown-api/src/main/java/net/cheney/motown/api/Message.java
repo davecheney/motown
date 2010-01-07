@@ -6,6 +6,7 @@ import static net.cheney.motown.api.Header.CONNECTION;
 import static net.cheney.motown.api.Header.CONTENT_LENGTH;
 import static net.cheney.motown.api.Header.TRANSFER_ENCODING;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -27,13 +28,6 @@ public abstract class Message {
 	
 	public enum TransferCoding { NONE, CHUNKED };
 	
-	public interface HttpHeader {
-
-		Header.Type type();
-		
-		String value();
-	}
-
 	Message(@Nonnull Multimap<Header, String> headers, @Nullable ByteBuffer body) {
 		this.headers = headers;
 		this.body = body;
@@ -55,18 +49,19 @@ public abstract class Message {
 	@SuppressWarnings("unchecked")
 	public <V extends Message> V setBody(ByteBuffer body) {
 		this.body = body;
-		if(this.channel != null) {
-			try {
-				channel.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		closeQuietly(channel);
 		this.channel = null;
 		return (V) this;
 	}
 	
+	private void closeQuietly(@Nullable Closeable channel) {
+		try {
+			if (channel != null) {
+				channel.close();
+			}
+		} catch (IOException ignored) { }
+	}
+
 	@SuppressWarnings("unchecked")
 	public <V extends Message> V setBody(FileChannel channel) {
 		this.channel = channel;

@@ -1,6 +1,5 @@
 package net.cheney.motown.api;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static net.cheney.motown.api.Header.DEPTH;
 import static net.cheney.motown.api.Header.DESTINATION;
 import static net.cheney.motown.api.Header.OVERWRITE;
@@ -68,15 +67,15 @@ public final class Request extends Message {
 	}
 	
 	public Depth getDepth(Depth defaultDepth) {
-		return Depth.parse(getOnlyElement(header(DEPTH), defaultDepth.toString()), defaultDepth);
+		return Depth.parse(header(DEPTH).getOnlyElementWithDefault(defaultDepth.toString()), defaultDepth);
 	}
 
 	public URI getDestination() {
-		return URI.create(getOnlyElement(header(DESTINATION), ""));
+		return URI.create(header(DESTINATION).getOnlyElementWithDefault(""));
 	}
 
 	public boolean isOverwrite() {
-		return getOnlyElement(header(OVERWRITE), "T").equals("T");
+		return header(OVERWRITE).getOnlyElementWithDefault("T").equals("T");
 	}
 	
 }
