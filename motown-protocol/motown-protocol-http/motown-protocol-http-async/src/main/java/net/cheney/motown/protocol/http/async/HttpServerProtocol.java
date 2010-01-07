@@ -2,8 +2,6 @@ package net.cheney.motown.protocol.http.async;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.util.Collection;
-import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 
