@@ -73,6 +73,10 @@ public abstract class Message {
 		return body;
 	}
 	
+	public final FileChannel channel() {
+		return channel;
+	}
+	
 	public final boolean hasBody() {
 		if(body != null) {
 			return body.hasRemaining();

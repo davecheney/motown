@@ -63,14 +63,7 @@ public class DispatcherTest {
 	@Before
 	public void setup() {
 		this.handler = new DynamicResourceHandler(factory);
-		this.dispatcher = new Dispatcher(handler) {
-			
-			@Override
-			public void handleRequest(Request request,
-					HttpResponseHandler responseHandler) {
-				createWorker(request, responseHandler).run();
-			}
-		};
+		this.dispatcher = new Dispatcher(handler);
 		this.responseHandler = new TestResponseHandler();
 	}
 	

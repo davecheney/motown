@@ -49,7 +49,8 @@ public class HttpServerProtocol extends HttpProtocol<Request> implements HttpRes
 		// TODO: needs unit test
 		if (response.mayContainBody()) {
 			if (response.hasBody()) {
-				buffer.append(String.format("Content-Length: %d\r\n", response.body().remaining()));
+				if(response.hasChannel()) {
+					buffer.append(String.format("Content-Length: %d\r\n", response.channel().size()));
 			} else {
 				buffer.append("Content-Length: 0\r\n");
 			}

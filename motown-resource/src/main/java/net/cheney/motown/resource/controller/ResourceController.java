@@ -1,6 +1,7 @@
 package net.cheney.motown.resource.controller;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static net.cheney.motown.api.Header.CONTENT_TYPE;
 import static net.cheney.motown.api.Response.clientErrorConflict;
 import static net.cheney.motown.api.Response.clientErrorLocked;
 import static net.cheney.motown.api.Response.clientErrorMethodNotAllowed;
@@ -244,7 +245,7 @@ public class ResourceController {
 		final Resource resource = resolveResource(path);
 		
 		try {
-			return Response.success(MimeType.APPLICATION_OCTET_STREAM, resource.entity());
+			return Response.build(SUCCESS_OK).header(CONTENT_TYPE).set(MimeType.APPLICATION_OCTET_STREAM.toString()).setBody(resource.channel());
 		} catch (IOException e) {
 			return serverErrorInternal();
 		}
