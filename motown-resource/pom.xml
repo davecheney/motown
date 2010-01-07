@@ -15,7 +15,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>net.cheney.motown</groupId>
-			<artifactId>motown-api</artifactId>
+			<artifactId>motown-dispatcher</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
