@@ -133,7 +133,7 @@ public abstract class Message {
 		
 		@Override
 		public String toString() {
-			return String.format("%s: {%s=%s}", super.toString(), header, get()); 
+			return String.format("%s=%s", header, get()); 
 		}
 		
 		@Override
