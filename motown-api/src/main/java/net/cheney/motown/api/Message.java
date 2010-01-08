@@ -25,19 +25,26 @@ public abstract class Message {
 	private final Multimap<Header, String> headers;
 	private ByteBuffer body;
 	private FileChannel channel;
+	private BodyType bodyType;
 	
 	public enum TransferCoding { NONE, CHUNKED };
+	
+	public enum BodyType { BUFFER, CHANNEL };
+	
+	
 	
 	Message(@Nonnull Multimap<Header, String> headers, @Nullable ByteBuffer body) {
 		this.headers = headers;
 		this.body = body;
 		this.channel = null;
+		this.bodyType = BodyType.BUFFER;
 	}
 	
 	Message(@Nonnull Multimap<Header, String> headers, @Nullable FileChannel channel) {
 		this.headers = headers;
 		this.body = null;
 		this.channel = channel;
+		this.bodyType = BodyType.CHANNEL;
 	}
 	
 	public abstract Version version();

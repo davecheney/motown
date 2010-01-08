@@ -17,5 +17,6 @@
 	<modules>
 		<module>motown-protocol-http-common</module>
 		<module>motown-protocol-http-async</module>
+		<module>motown-protocol-http-theaded</module>
 	</modules>
 </project>

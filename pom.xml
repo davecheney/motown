@@ -187,4 +187,5 @@
 			<url>http://nexus.cheney.net/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
+
 </project>

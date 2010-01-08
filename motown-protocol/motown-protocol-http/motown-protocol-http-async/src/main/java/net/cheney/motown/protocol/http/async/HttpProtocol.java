@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-import net.cheney.motown.api.Header;
 import net.cheney.motown.api.Message;
 import net.cheney.motown.protocol.http.common.BodyHandler;
 import net.cheney.motown.protocol.http.common.HttpParser;
@@ -91,6 +90,12 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 				bodyHandler = new IdentityBodyHandler();
 				bodyHandler.bodyReceived(bodyBuffer);
 			} else {
+				/** 
+				 * TODO Need to think about pipelining, the buffer could contain addition data for subsequent requests
+				 * HttpBIS 7.1.2.2 says that this will only happen on idempotent messages, which means they don't have a body
+				 * To fix this properly, we probably need to store the buffer passed, and then reuse it in doRead() later on
+				 * to ensure that data is no lost. 
+				 */
 				onMessage(message);
 			}
 			break;
