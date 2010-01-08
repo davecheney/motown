@@ -2,6 +2,7 @@ package net.cheney.motown.protocol.http.async;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -30,7 +31,7 @@ public class HttpServerProtocol extends HttpProtocol<Request> implements HttpRes
 	
 	public final void sendResponse(final Response response, boolean requestClose) {
 		ByteBuffer header = buildHeaderBuffer(response, requestClose);
-		ByteBuffer body = response.body();
+		ByteBuffer body = response.buffer();
 		if(body == null) {
 			write(header, requestClose);
 		} else {
@@ -50,7 +51,14 @@ public class HttpServerProtocol extends HttpProtocol<Request> implements HttpRes
 		if (response.mayContainBody()) {
 			if (response.hasBody()) {
 				if(response.hasChannel()) {
-					buffer.append(String.format("Content-Length: %d\r\n", response.channel().size()));
+					try {
+						buffer.append(String.format("Content-Length: %d\r\n", response.channel().size()));
+					} catch(IOException e) {
+						throw new RuntimeException(e);
+					}
+				} else {
+					buffer.append(String.format("Content-Length: %d\r\n", response.buffer().remaining()));
+				}
 			} else {
 				buffer.append("Content-Length: 0\r\n");
 			}

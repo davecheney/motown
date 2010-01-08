@@ -123,7 +123,7 @@ public class ResourceController {
 			return clientErrorMethodNotAllowed();
 		}
 
-		ByteBuffer entity = request.body();
+		ByteBuffer entity = request.buffer();
 		resource.put(entity);
 		return successCreated();
 	}
@@ -535,7 +535,7 @@ public class ResourceController {
 	public Message proppatch(@Context Request request) throws IOException {
 		final Path path = Path.fromString(request.uri().getPath());
 		final Resource resource = resolveResource(path);
-		final Iterable<QName> properties = getProperties(request.body());
+		final Iterable<QName> properties = getProperties(request.buffer());
 		final List<RESPONSE> responses = propfind(properties, resource, request.getDepth(Depth.INFINITY));
 		return successMultiStatus(multistatus(responses));
 	}
@@ -547,7 +547,7 @@ public class ResourceController {
 
 	@PROPFIND
 	public Message propfind(@Context Request request) throws IOException {
-		return propfind(Path.fromString(request.uri().getPath()), request.getDepth(Depth.INFINITY), request.body());
+		return propfind(Path.fromString(request.uri().getPath()), request.getDepth(Depth.INFINITY), request.buffer());
 	}
 
 	private Message propfind(Path path, Depth depth, ByteBuffer body) throws IOException {

@@ -69,7 +69,7 @@ public abstract class Message {
 		return (V) this;
 	}
 
-	public final ByteBuffer body() {
+	public final ByteBuffer buffer() {
 		return body;
 	}
 	
