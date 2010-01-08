@@ -1,9 +1,13 @@
 package net.cheney.motown.protocol.http.async;
 
+import static java.lang.Integer.parseInt;
+import static net.cheney.motown.api.Header.CONTENT_LENGTH;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
+import net.cheney.motown.api.Header;
 import net.cheney.motown.api.Message;
 import net.cheney.motown.protocol.http.common.BodyHandler;
 import net.cheney.motown.protocol.http.common.HttpParser;
@@ -80,7 +84,8 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 		// handle body
 		switch(message.transferCoding()) {
 		case NONE:
-			final int contentLength = message.contentLength();
+			// does the message header indicate an entity body ?
+			final int contentLength = parseInt(message.header(CONTENT_LENGTH).getOnlyElementWithDefault("0"));
 			if (contentLength > 0) {
 				final ByteBuffer bodyBuffer = ByteBuffer.allocate(contentLength).put(buffer);
 				bodyHandler = new IdentityBodyHandler();
