@@ -16,6 +16,11 @@ public class WriteChannelRequest extends net.cheney.rev.channel.AsyncSocketChann
 	}
 
 	@Override
+	public void completed() {
+		closeQuietly(fc);
+	}
+	
+	@Override
 	public boolean accept(SocketChannel channel) throws IOException {
 		long c = fc.transferTo(position, count, channel);
 		position += c;

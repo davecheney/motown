@@ -135,15 +135,21 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 		if(close) 
 			writeAndClose(header, channel);
 		else {
-			write(header);
+			write(header, channel);
 		}
 	}
 	
+	private void write(ByteBuffer header, FileChannel channel) throws IOException {
+		channel().send(new WriteRequest(header));
+		channel().send(new WriteChannelRequest(channel));
+	}
+
 	private void writeAndClose(ByteBuffer header, FileChannel channel) throws IOException {
 		channel().send(new WriteRequest(header));
 		channel().send(new WriteChannelRequest(channel) {
 			
 			public void completed() {
+				super.completed();
 				channel().shutdownOutput();
 			}
 			

@@ -17,7 +17,6 @@ import net.cheney.motown.protocol.common.HttpResponseHandler;
 import net.cheney.motown.protocol.http.common.RequestParser;
 import net.cheney.rev.channel.AsyncSocketChannel;
 
-
 public class HttpServerProtocol extends HttpProtocol<Request> implements HttpResponseHandler {
 	private static final Logger LOG = Logger.getLogger(HttpServerProtocol.class);
 	
@@ -45,15 +44,10 @@ public class HttpServerProtocol extends HttpProtocol<Request> implements HttpRes
 	private void sendResponse0(Response response, boolean requestClose) throws IOException {
 		ByteBuffer header = buildHeaderBuffer(response, requestClose);
 		if(response.hasBody()) {
-			switch(response.bodyType()) {
-			case BUFFER:
+			if(response.buffer() != null) {
 				write(new ByteBuffer[] { header, response.buffer() }, requestClose);
-				break;
-				
-			case CHANNEL:
-			default:
+			} else { 
 				write(header, response.channel(), requestClose);
-				break;
 			}
 		} else {
 			write(header, requestClose);

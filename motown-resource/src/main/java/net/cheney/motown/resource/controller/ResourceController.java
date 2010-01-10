@@ -8,6 +8,7 @@ import static net.cheney.motown.api.Header.DAV;
 import static net.cheney.motown.api.Header.IF_MODIFIED_SINCE;
 import static net.cheney.motown.api.Header.LOCK_TOKEN;
 import static net.cheney.motown.api.MimeType.APPLICATION_OCTET_STREAM;
+import static net.cheney.motown.api.MimeType.APPLICATION_XML;
 import static net.cheney.motown.api.Response.clientErrorConflict;
 import static net.cheney.motown.api.Response.clientErrorLocked;
 import static net.cheney.motown.api.Response.clientErrorMethodNotAllowed;
@@ -47,7 +48,6 @@ import net.cheney.motown.api.Depth;
 import net.cheney.motown.api.Header;
 import net.cheney.motown.api.Message;
 import net.cheney.motown.api.Method;
-import net.cheney.motown.api.MimeType;
 import net.cheney.motown.api.Request;
 import net.cheney.motown.api.Response;
 import net.cheney.motown.api.Status;
@@ -548,7 +548,7 @@ public class ResourceController {
 
 	private Message successMultiStatus(MULTISTATUS multiStatus) {
 		final Document doc = new Document(XML_DECLARATION, multiStatus);
-		return Response.build(SUCCESS_MULTI_STATUS).header(CONTENT_TYPE).set(MimeType.TEXT_XML.toString()).setBody(CHARSET_UTF_8.encode(XMLWriter.write(doc)));
+		return Response.build(SUCCESS_MULTI_STATUS).header(CONTENT_TYPE).set(APPLICATION_XML.toString()).setBody(CHARSET_UTF_8.encode(XMLWriter.write(doc)));
 	}
 
 	@PROPFIND
