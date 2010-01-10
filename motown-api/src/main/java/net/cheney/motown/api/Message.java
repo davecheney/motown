@@ -1,9 +1,6 @@
 package net.cheney.motown.api;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
-import static java.lang.Integer.parseInt;
 import static net.cheney.motown.api.Header.CONNECTION;
-import static net.cheney.motown.api.Header.CONTENT_LENGTH;
 import static net.cheney.motown.api.Header.TRANSFER_ENCODING;
 
 import java.io.Closeable;
@@ -30,8 +27,6 @@ public abstract class Message {
 	public enum TransferCoding { NONE, CHUNKED };
 	
 	public enum BodyType { BUFFER, CHANNEL };
-	
-	
 	
 	Message(@Nonnull Multimap<Header, String> headers, @Nullable ByteBuffer body) {
 		this.headers = headers;
@@ -84,13 +79,18 @@ public abstract class Message {
 		return channel;
 	}
 	
+	public final BodyType bodyType() {
+		return bodyType;
+	}
+	
 	public final boolean hasBody() {
-		if(body != null) {
+		switch(bodyType()) {
+		case BUFFER:
 			return body.hasRemaining();
-		} else if (hasChannel()) {
+			
+		case CHANNEL:
+		default:
 			return true;
-		} else { 
-			return false;
 		}
 	}
 	
@@ -102,8 +102,15 @@ public abstract class Message {
 		return "chunked".equalsIgnoreCase(header(TRANSFER_ENCODING).getOnlyElementWithDefault(null)) ? TransferCoding.CHUNKED : TransferCoding.NONE;
 	}
 	
-	public final int contentLength() {
-		return parseInt(getOnlyElement(header(CONTENT_LENGTH), "0"));
+	public final long contentLength() throws IOException {
+		switch(bodyType) {
+		case BUFFER:
+			return body.remaining();
+			
+		case CHANNEL:
+		default:
+			return channel.size();
+		}
 	}
 	
 	public boolean closeRequested() {

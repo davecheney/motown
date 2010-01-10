@@ -13,7 +13,11 @@ import org.apache.commons.lang.time.FastDateFormat;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+
+import static net.cheney.motown.api.Header.CONTENT_TYPE;
+import static net.cheney.motown.api.Header.DATE;
 import static net.cheney.motown.api.Status.*;
+import static net.cheney.motown.api.Version.HTTP_1_1;
 
 public final class Response extends Message {
 
@@ -23,21 +27,22 @@ public final class Response extends Message {
 
 	private Response(StatusLine statusLine, Multimap<Header, String> headers, ByteBuffer body) {
 		super(headers, body);
-		header(Header.DATE).set(RFC1123_DATE_FORMAT.format(System.currentTimeMillis()));
+		header(DATE).set(RFC1123_DATE_FORMAT.format(System.currentTimeMillis()));
 		this.statusLine = statusLine;
 	}
 	
 	private Response(StatusLine statusLine, Multimap<Header, String> headers, FileChannel body) {
 		super(headers, body);
+		header(DATE).set(RFC1123_DATE_FORMAT.format(System.currentTimeMillis()));
 		this.statusLine = statusLine;
 	}
 
 	public static Response build(Status status) {
-		return new Response(new StatusLine(Version.HTTP_1_1, status), ArrayListMultimap.<Header, String>create(), ByteBuffer.allocate(0));
+		return new Response(new StatusLine(HTTP_1_1, status), ArrayListMultimap.<Header, String>create(), ByteBuffer.allocate(0));
 	}
 	
 	public Response(Status status, Multimap<Header, String> headers, ByteBuffer body) {
-		this(new StatusLine(Version.HTTP_1_1, status), headers, body);
+		this(new StatusLine(HTTP_1_1, status), headers, body);
 	}
 
 	public Status status() {
@@ -64,19 +69,19 @@ public final class Response extends Message {
 	}
 	
 	public static Response successCreated() {
-		return Response.build(Status.SUCCESS_CREATED);
+		return Response.build(SUCCESS_CREATED);
 	}
 	
 	public static Response successNoContent() {
-		return Response.build(Status.SUCCESS_NO_CONTENT);
+		return Response.build(SUCCESS_NO_CONTENT);
 	}
 
 	public static Response serverErrorInternal() {
-		return Response.build(Status.SERVER_ERROR_INTERNAL);
+		return Response.build(SERVER_ERROR_INTERNAL);
 	}
 
 	public static Response serverErrorNotImplemented() {
-		return Response.build(Status.SERVER_ERROR_NOT_IMPLEMENTED);
+		return Response.build(SERVER_ERROR_NOT_IMPLEMENTED);
 	}
 
 	public static Message clientErrorNotFound() {
@@ -104,12 +109,12 @@ public final class Response extends Message {
 	}
 	
 	public static Message redirectionNotModified() {
-		return Response.build(Status.REDIRECTION_NOT_MODIFIED);
+		return Response.build(REDIRECTION_NOT_MODIFIED);
 	}
 	
 
 	public static Message success(MimeType mime, ByteBuffer buffer) {
-		return Response.build(SUCCESS_OK).header(Header.CONTENT_TYPE).set(mime.toString()).setBody(buffer);
+		return Response.build(SUCCESS_OK).header(CONTENT_TYPE).set(mime.toString()).setBody(buffer);
 	}
 
 	public boolean mayContainBody() {

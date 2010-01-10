@@ -5,6 +5,7 @@ import static net.cheney.motown.api.Header.CONTENT_LENGTH;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 
 import net.cheney.motown.api.Message;
@@ -130,6 +131,30 @@ abstract class HttpProtocol<V extends Message> extends Protocol {
 			write(buffer);
 	}
 	
+	protected final void write(ByteBuffer header, FileChannel channel, boolean close) throws IOException {
+		if(close) 
+			writeAndClose(header, channel);
+		else {
+			write(header);
+		}
+	}
+	
+	private void writeAndClose(ByteBuffer header, FileChannel channel) throws IOException {
+		channel().send(new WriteRequest(header));
+		channel().send(new WriteChannelRequest(channel) {
+			
+			public void completed() {
+				channel().shutdownOutput();
+			}
+			
+			@Override
+			public void failed(Throwable t) {
+				LOG.fatal("Unable to write response due to unhandled exception", t);
+				shutdown();
+			}
+		});
+	}
+
 	protected final void write(final ByteBuffer buffer) {
 		channel().send(new WriteRequest(buffer));
 	}

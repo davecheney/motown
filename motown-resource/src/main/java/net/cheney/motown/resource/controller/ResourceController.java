@@ -1,7 +1,13 @@
 package net.cheney.motown.resource.controller;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static net.cheney.motown.api.Depth.INFINITY;
+import static net.cheney.motown.api.Header.ALLOW;
 import static net.cheney.motown.api.Header.CONTENT_TYPE;
+import static net.cheney.motown.api.Header.DAV;
+import static net.cheney.motown.api.Header.IF_MODIFIED_SINCE;
+import static net.cheney.motown.api.Header.LOCK_TOKEN;
+import static net.cheney.motown.api.MimeType.APPLICATION_OCTET_STREAM;
 import static net.cheney.motown.api.Response.clientErrorConflict;
 import static net.cheney.motown.api.Response.clientErrorLocked;
 import static net.cheney.motown.api.Response.clientErrorMethodNotAllowed;
@@ -13,6 +19,7 @@ import static net.cheney.motown.api.Response.serverErrorInternal;
 import static net.cheney.motown.api.Response.serverErrorNotImplemented;
 import static net.cheney.motown.api.Response.successCreated;
 import static net.cheney.motown.api.Response.successNoContent;
+import static net.cheney.motown.api.Status.SUCCESS_MULTI_STATUS;
 import static net.cheney.motown.api.Status.SUCCESS_OK;
 import static net.cheney.motown.resource.api.Elements.activeLock;
 import static net.cheney.motown.resource.api.Elements.href;
@@ -21,6 +28,9 @@ import static net.cheney.motown.resource.api.Elements.multistatus;
 import static net.cheney.motown.resource.api.Elements.prop;
 import static net.cheney.motown.resource.api.Elements.propertyStatus;
 import static net.cheney.motown.resource.api.Elements.response;
+import static net.cheney.motown.resource.api.Lock.Scope.EXCLUSIVE;
+import static net.cheney.motown.resource.api.Lock.Type.WRITE;
+import static net.cheney.snax.model.ProcessingInstruction.XML_DECLARATION;
 
 import java.io.IOException;
 import java.net.URI;
@@ -62,13 +72,10 @@ import net.cheney.motown.resource.api.Elements.ACTIVE_LOCK;
 import net.cheney.motown.resource.api.Elements.MULTISTATUS;
 import net.cheney.motown.resource.api.Elements.PROPSTAT;
 import net.cheney.motown.resource.api.Elements.RESPONSE;
-import net.cheney.motown.resource.api.Lock.Scope;
-import net.cheney.motown.resource.api.Lock.Type;
 import net.cheney.motown.resource.api.Resource.ComplianceClass;
 import net.cheney.motown.uri.Path;
 import net.cheney.snax.model.Document;
 import net.cheney.snax.model.Element;
-import net.cheney.snax.model.ProcessingInstruction;
 import net.cheney.snax.model.QName;
 import net.cheney.snax.parser.XMLBuilder;
 import net.cheney.snax.writer.XMLWriter;
@@ -76,7 +83,6 @@ import net.cheney.snax.writer.XMLWriter;
 import org.apache.log4j.Logger;
 
 import com.google.common.base.Function;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterables;
 
 public class ResourceController {
@@ -245,7 +251,7 @@ public class ResourceController {
 		final Resource resource = resolveResource(path);
 		
 		try {
-			return Response.build(SUCCESS_OK).header(CONTENT_TYPE).set(MimeType.APPLICATION_OCTET_STREAM.toString()).setBody(resource.channel());
+			return Response.build(SUCCESS_OK).header(CONTENT_TYPE).set(APPLICATION_OCTET_STREAM.toString()).setBody(resource.channel());
 		} catch (IOException e) {
 			return serverErrorInternal();
 		}
@@ -256,7 +262,7 @@ public class ResourceController {
 		final Resource resource = resolveResource(path);
 
 		try {
-			String date = getOnlyElement(request.headers().get(Header.IF_MODIFIED_SINCE));
+			String date = getOnlyElement(request.headers().get(IF_MODIFIED_SINCE));
 			Date ifModifiedSince = new SimpleDateFormat().parse(date);
 			if (!ifModifiedSince.after(new Date())
 					&& !(resource.lastModified().after(new Date()))) {
@@ -302,14 +308,14 @@ public class ResourceController {
 		final Resource resource = resolveResource(path);
 
 		if (resource.exists()) {
-			final Lock lock = resource.lock(Type.WRITE, Scope.EXCLUSIVE);
+			final Lock lock = resource.lock(WRITE, EXCLUSIVE);
 			
-			final ACTIVE_LOCK activelock = activeLock(lock, request.getDepth(Depth.INFINITY), relativizeResource(resource));
+			final ACTIVE_LOCK activelock = activeLock(lock, request.getDepth(INFINITY), relativizeResource(resource));
 			final Element lockDiscovery = lockDiscovery(activelock);
 			final Element prop = prop(lockDiscovery);
-			final Document doc = new Document(ProcessingInstruction.XML_DECLARATION, prop);
+			final Document doc = new Document(XML_DECLARATION, prop);
 			return Response.build(SUCCESS_OK)
-				.header(Header.LOCK_TOKEN).set("<" + lock.token() + ">")
+				.header(LOCK_TOKEN).set("<" + lock.token() + ">")
 				.setBody(Charset.defaultCharset().encode(XMLWriter.write(doc)));
 		} else {
 			return clientErrorNotFound();
@@ -323,11 +329,11 @@ public class ResourceController {
 
 		Message response = Response.successNoContent();
 		for(Method method : resource.supportedMethods()) {
-			response.headers().put(Header.ALLOW, method.name());
+			response.headers().put(ALLOW, method.name());
 		}
 		
 		for(ComplianceClass value : resource.davOptions()) {
-			response.headers().put(Header.DAV, value.toString());
+			response.headers().put(DAV, value.toString());
 		}
 		
 		return response;
@@ -541,8 +547,8 @@ public class ResourceController {
 	}
 
 	private Message successMultiStatus(MULTISTATUS multiStatus) {
-		final Document doc = new Document(ProcessingInstruction.XML_DECLARATION, multiStatus);
-		return new Response(Status.SUCCESS_MULTI_STATUS, ArrayListMultimap.<Header, String>create(), CHARSET_UTF_8.encode(XMLWriter.write(doc)));
+		final Document doc = new Document(XML_DECLARATION, multiStatus);
+		return Response.build(SUCCESS_MULTI_STATUS).header(CONTENT_TYPE).set(MimeType.TEXT_XML.toString()).setBody(CHARSET_UTF_8.encode(XMLWriter.write(doc)));
 	}
 
 	@PROPFIND
