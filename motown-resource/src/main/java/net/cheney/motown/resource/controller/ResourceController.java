@@ -62,6 +62,7 @@ import net.cheney.motown.dispatcher.dynamic.OPTIONS;
 import net.cheney.motown.dispatcher.dynamic.PROPFIND;
 import net.cheney.motown.dispatcher.dynamic.PROPPATCH;
 import net.cheney.motown.dispatcher.dynamic.PUT;
+import net.cheney.motown.dispatcher.dynamic.PathTranslated;
 import net.cheney.motown.dispatcher.dynamic.UNLOCK;
 import net.cheney.motown.resource.api.Elements;
 import net.cheney.motown.resource.api.Lock;
@@ -323,8 +324,7 @@ public class ResourceController {
 	}
 	
 	@OPTIONS
-	public Message options(@Context Request request) {
-		final Path path = Path.fromString(request.uri().getPath());
+	public Message options(@PathTranslated Path path) {
 		final Resource resource = resolveResource(path);
 
 		Message response = Response.successNoContent();
@@ -340,8 +340,7 @@ public class ResourceController {
 	}
 	
 	@UNLOCK
-	public Message unlock(@Context Request request) throws IOException {
-		final Path path = Path.fromString(request.uri().getPath());
+	public Message unlock(@PathTranslated Path path) throws IOException {
 		final Resource resource = resolveResource(path);
 		
 		if (resource.exists()) {

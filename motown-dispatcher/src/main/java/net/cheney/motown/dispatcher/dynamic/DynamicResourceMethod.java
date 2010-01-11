@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import net.cheney.motown.api.Message;
 import net.cheney.motown.api.Request;
 import net.cheney.motown.api.Response;
 import net.cheney.motown.dispatcher.ResourceMethod;
@@ -34,6 +33,10 @@ public class DynamicResourceMethod implements ResourceMethod {
 				if(a.annotationType().equals(Context.class)) {
 					args[i] = new ContextAnnotationParameterInjector(params[i]);
 				}
+				if(a.annotationType().equals(PathTranslated.class)) {
+					args[i] = new PathTranslatedParameterInjector();
+				}
+
 			}
 		}
 		return args;
@@ -63,7 +66,7 @@ public class DynamicResourceMethod implements ResourceMethod {
 		}		
 	}
 
-	private final Object[] injectParameters(final Message request) {
+	private final Object[] injectParameters(final Request request) {
 		final Object[] args = new Object[paramInjectors.length];
 		for(int i = 0 ; i < paramInjectors.length ; ++i) {
 			args[i] = paramInjectors[i].injectParameter(request);
