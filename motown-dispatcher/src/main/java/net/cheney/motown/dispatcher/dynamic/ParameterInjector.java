@@ -1,8 +1,8 @@
 package net.cheney.motown.dispatcher.dynamic;
 
-import net.cheney.motown.api.Request;
+import net.cheney.motown.api.Message;
 
-public interface ParameterInjector {
+public interface ParameterInjector<V extends Message> {
 
-	public Object injectParameter(Request request);
+	public Object injectParameter(V request);
 }

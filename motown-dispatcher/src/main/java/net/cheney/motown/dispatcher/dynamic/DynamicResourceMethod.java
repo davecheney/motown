@@ -17,16 +17,16 @@ public class DynamicResourceMethod implements ResourceMethod {
 	private static final Logger LOG = Logger.getLogger(DynamicResourceMethod.class);
 
 	private final Method method;
-	private final ParameterInjector[] paramInjectors;
+	private final ParameterInjector<Request>[] paramInjectors;
 
 	public DynamicResourceMethod(Method method) {
 		this.method = method;
 		this.paramInjectors = buildParamInjectors();
 	}
 	
-	private ParameterInjector[] buildParamInjectors() {
+	private ParameterInjector<Request>[] buildParamInjectors() {
 		final Class<?>[] params = method.getParameterTypes();
-		final ParameterInjector[] args = new ParameterInjector[params.length];
+		final ParameterInjector<Request>[] args = new ParameterInjector[params.length];
 		final Annotation[][] paramAnnotations = method.getParameterAnnotations();
 		for(int i = 0 ; i < params.length ; ++i) {
 			for(Annotation a : paramAnnotations[i]) {
@@ -35,6 +35,9 @@ public class DynamicResourceMethod implements ResourceMethod {
 				}
 				if(a.annotationType().equals(PathTranslated.class)) {
 					args[i] = new PathTranslatedParameterInjector();
+				}
+				if(a.annotationType().equals(Fragment.class)) {
+					args[i] = new FragmentParameterInjector();
 				}
 
 			}

@@ -100,13 +100,13 @@ public enum Header {
 		return this.type;
 	}
 	
-	public final String value() {
-		return value;
-	}
-	
 	@Override
 	public String toString() {
 		return value();
+	}
+
+	public String value() {
+		return value;
 	}
 	
 }

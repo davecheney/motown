@@ -5,6 +5,7 @@ import static net.cheney.motown.api.Depth.INFINITY;
 import static net.cheney.motown.api.Header.ALLOW;
 import static net.cheney.motown.api.Header.CONTENT_TYPE;
 import static net.cheney.motown.api.Header.DAV;
+import static net.cheney.motown.api.Header.DEPTH;
 import static net.cheney.motown.api.Header.IF_MODIFIED_SINCE;
 import static net.cheney.motown.api.Header.LOCK_TOKEN;
 import static net.cheney.motown.api.MimeType.APPLICATION_OCTET_STREAM;
@@ -54,7 +55,9 @@ import net.cheney.motown.api.Status;
 import net.cheney.motown.dispatcher.dynamic.COPY;
 import net.cheney.motown.dispatcher.dynamic.Context;
 import net.cheney.motown.dispatcher.dynamic.DELETE;
+import net.cheney.motown.dispatcher.dynamic.Fragment;
 import net.cheney.motown.dispatcher.dynamic.GET;
+import net.cheney.motown.dispatcher.dynamic.HttpHeader;
 import net.cheney.motown.dispatcher.dynamic.LOCK;
 import net.cheney.motown.dispatcher.dynamic.MKCOL;
 import net.cheney.motown.dispatcher.dynamic.MOVE;
@@ -277,11 +280,10 @@ public class ResourceController {
 	}
 	
 	@DELETE
-	public Message delete(@Context Request request) throws IOException {
-		final Path path = Path.fromUri(request.uri());
+	public Message delete(@PathTranslated Path path, @Fragment String fragment) throws IOException {
 		final Resource resource = resolveResource(path);
 		
-		if (request.uri().getFragment() != null) {
+		if (fragment != null) {
 			return clientErrorMethodNotAllowed();
 		} else {
 			if (resource.isLocked()) {
