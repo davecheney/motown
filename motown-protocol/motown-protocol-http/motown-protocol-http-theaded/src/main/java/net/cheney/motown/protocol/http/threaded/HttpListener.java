@@ -51,7 +51,7 @@ public class HttpListener {
 		private void handleSelectionKey(SelectionKey key) {
 			if(key.isAcceptable()) {
 				ServerSocketChannel channel = (ServerSocketChannel) key.channel();
-				channel.
+//				channel.
 			}
 		}
 
