@@ -2,10 +2,10 @@ package net.cheney.motown.resource.controller;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static net.cheney.motown.api.Depth.INFINITY;
+import static net.cheney.motown.api.Depth.ZERO;
 import static net.cheney.motown.api.Header.ALLOW;
 import static net.cheney.motown.api.Header.CONTENT_TYPE;
 import static net.cheney.motown.api.Header.DAV;
-import static net.cheney.motown.api.Header.DEPTH;
 import static net.cheney.motown.api.Header.IF_MODIFIED_SINCE;
 import static net.cheney.motown.api.Header.LOCK_TOKEN;
 import static net.cheney.motown.api.MimeType.APPLICATION_OCTET_STREAM;
@@ -45,7 +45,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import net.cheney.motown.api.Depth;
 import net.cheney.motown.api.Header;
 import net.cheney.motown.api.Message;
 import net.cheney.motown.api.Method;
@@ -55,9 +54,9 @@ import net.cheney.motown.api.Status;
 import net.cheney.motown.dispatcher.dynamic.COPY;
 import net.cheney.motown.dispatcher.dynamic.Context;
 import net.cheney.motown.dispatcher.dynamic.DELETE;
+import net.cheney.motown.dispatcher.dynamic.Depth;
 import net.cheney.motown.dispatcher.dynamic.Fragment;
 import net.cheney.motown.dispatcher.dynamic.GET;
-import net.cheney.motown.dispatcher.dynamic.HttpHeader;
 import net.cheney.motown.dispatcher.dynamic.LOCK;
 import net.cheney.motown.dispatcher.dynamic.MKCOL;
 import net.cheney.motown.dispatcher.dynamic.MOVE;
@@ -306,14 +305,13 @@ public class ResourceController {
 	}
 	
 	@LOCK
-	public Message lock(@Context Request request) throws IOException {
-		final Path path = Path.fromUri(request.uri());
+	public Message lock(@PathTranslated Path path, @Depth(INFINITY) net.cheney.motown.api.Depth depth) throws IOException {
 		final Resource resource = resolveResource(path);
 
 		if (resource.exists()) {
 			final Lock lock = resource.lock(WRITE, EXCLUSIVE);
 			
-			final ACTIVE_LOCK activelock = activeLock(lock, request.getDepth(INFINITY), relativizeResource(resource));
+			final ACTIVE_LOCK activelock = activeLock(lock, depth, relativizeResource(resource));
 			final Element lockDiscovery = lockDiscovery(activelock);
 			final Element prop = prop(lockDiscovery);
 			final Document doc = new Document(XML_DECLARATION, prop);
@@ -539,11 +537,11 @@ public class ResourceController {
 	}
 	
 	@PROPPATCH
-	public Message proppatch(@Context Request request) throws IOException {
+	public Message proppatch(@Context Request request, @Depth(INFINITY) net.cheney.motown.api.Depth depth) throws IOException {
 		final Path path = Path.fromString(request.uri().getPath());
 		final Resource resource = resolveResource(path);
 		final Iterable<QName> properties = getProperties(request.buffer());
-		final List<RESPONSE> responses = propfind(properties, resource, request.getDepth(Depth.INFINITY));
+		final List<RESPONSE> responses = propfind(properties, resource, depth);
 		return successMultiStatus(multistatus(responses));
 	}
 
@@ -554,10 +552,10 @@ public class ResourceController {
 
 	@PROPFIND
 	public Message propfind(@Context Request request) throws IOException {
-		return propfind(Path.fromString(request.uri().getPath()), request.getDepth(Depth.INFINITY), request.buffer());
+		return propfind(Path.fromString(request.uri().getPath()), request.getDepth(INFINITY), request.buffer());
 	}
 
-	private Message propfind(Path path, Depth depth, ByteBuffer body) throws IOException {
+	private Message propfind(Path path, net.cheney.motown.api.Depth depth, ByteBuffer body) throws IOException {
 		final Resource resource = resolveResource(path);
 
 			final Iterable<QName> properties = getProperties(body);
@@ -569,14 +567,13 @@ public class ResourceController {
 			}
 	}
 
-	private final List<RESPONSE> propfind(final Iterable<QName> properties, final Resource resource, final Depth depth) {
+	private final List<RESPONSE> propfind(final Iterable<QName> properties, final Resource resource, final net.cheney.motown.api.Depth depth) {
 		final List<RESPONSE> responses = new ArrayList<RESPONSE>();
 		
 		responses.add(response(href(relativizeResource(resource)), getProperties(resource, properties)));
-		if (depth != Depth.ZERO) {
-			final Depth newdepth = depth.decreaseDepth();
+		if (depth != ZERO) {
 			for (final Resource child : resource.members()) {
-				responses.addAll(propfind(properties, child, newdepth));
+				responses.addAll(propfind(properties, child, depth.decreaseDepth()));
 			}
 		}
 		return responses;
