@@ -106,8 +106,7 @@ public class ResourceController {
 	}
 
 	@GET
-	public Message get(@Context Request request) throws IOException {
-		final Path path = Path.fromString(request.uri().getPath());
+	public Message get(@PathTranslated Path path, @Context Request request) throws IOException {
 		final Resource resource = resolveResource(path);
 		if (resource.exists()) {
 			if(resource.isCollection()) {
@@ -121,8 +120,7 @@ public class ResourceController {
 	}
 	
 	@PUT
-	public Message put(@Context Request request) throws IOException {
-		final Path path = Path.fromString(request.uri().getPath());
+	public Message put(@PathTranslated Path path, @Context Request request) throws IOException {
 		final Resource resource = resolveResource(path);
 		if (!resource.parent().exists()) {
 			return clientErrorConflict();
@@ -356,8 +354,7 @@ public class ResourceController {
 	}
 	
 	@MOVE
-	public Message move(@Context Request request) throws IOException {
-		final Path path = Path.fromString(request.uri().getPath());
+	public Message move(@PathTranslated Path path, @Context Request request) throws IOException {
 		final Resource source = resolveResource(path);
 
 		final URI destinationUri = request.getDestination();
@@ -413,8 +410,7 @@ public class ResourceController {
 	}
 
 	@COPY
-	public Message copy(@Context Request request) throws IOException {
-		final Path path = Path.fromString(request.uri().getPath());
+	public Message copy(@PathTranslated Path path, @Context Request request) throws IOException {
 		final Resource source = resolveResource(path);
 
 		final URI destinationUri = request.getDestination();
@@ -516,8 +512,7 @@ public class ResourceController {
 	}
 	
 	@MKCOL
-	public Message mkcol(@Context Request request) {
-		final Path path = Path.fromString(request.uri().getPath());
+	public Message mkcol(@PathTranslated Path path, @Context Request request) {
 		final Resource resource = resolveResource(path);
 		
 		if (request.hasBody()) {
@@ -537,8 +532,7 @@ public class ResourceController {
 	}
 	
 	@PROPPATCH
-	public Message proppatch(@Context Request request, @Depth(INFINITY) net.cheney.motown.api.Depth depth) throws IOException {
-		final Path path = Path.fromString(request.uri().getPath());
+	public Message proppatch(@PathTranslated Path path, @Context Request request, @Depth(INFINITY) net.cheney.motown.api.Depth depth) throws IOException {
 		final Resource resource = resolveResource(path);
 		final Iterable<QName> properties = getProperties(request.buffer());
 		final List<RESPONSE> responses = propfind(properties, resource, depth);
@@ -551,8 +545,8 @@ public class ResourceController {
 	}
 
 	@PROPFIND
-	public Message propfind(@Context Request request) throws IOException {
-		return propfind(Path.fromString(request.uri().getPath()), request.getDepth(INFINITY), request.buffer());
+	public Message propfind(@PathTranslated Path path, @Depth(INFINITY) net.cheney.motown.api.Depth depth, @Context Request request) throws IOException {
+		return propfind(path, depth, request.buffer());
 	}
 
 	private Message propfind(Path path, net.cheney.motown.api.Depth depth, ByteBuffer body) throws IOException {
