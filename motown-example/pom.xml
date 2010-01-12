@@ -9,6 +9,9 @@
   <artifactId>motown-example</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
+  
+  <name>Motown Examples</name>
+  
   <modules>
   	<module>motown-example-webdav</module>
   </modules>

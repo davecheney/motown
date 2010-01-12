@@ -10,6 +10,8 @@
 	<artifactId>motown-example-webdav</artifactId>
 	<version>1.0-SNAPSHOT</version>
 
+	<name>Motown Example WebDAV Server</name>
+
 	<build>
 		<plugins>
 			<plugin>
