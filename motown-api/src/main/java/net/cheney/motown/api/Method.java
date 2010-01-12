@@ -41,7 +41,11 @@ public enum Method {
 	UNCHECKOUT,
 	UPDATE,
 	LABEL,
-	MKWORKSPACE, VERSION_CONTROL, CHECKOUT, SEARCH;
+	MKWORKSPACE, VERSION_CONTROL, CHECKOUT, SEARCH,
+	
+	// CALDAV RFC 4791
+	
+	MKCALENDAR;
 	
 	public static Method parse(@Nonnull CharSequence method) {
 		return valueOf(method.toString());
