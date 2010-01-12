@@ -13,6 +13,7 @@
 		<module>motown-protocol</module>
 		<module>motown-dispatcher</module>
 		<module>motown-resource</module>
+		<module>motown-example</module>
 	</modules>
 
 	<properties>
@@ -79,6 +80,11 @@
 							</goals>
 						</execution>
 					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>1.2.2</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
