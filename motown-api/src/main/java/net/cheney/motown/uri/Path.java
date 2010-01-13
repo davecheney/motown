@@ -1,55 +1,39 @@
 package net.cheney.motown.uri;
 
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import org.apache.commons.lang.StringUtils;
 
 public abstract class Path implements Comparable<Path>, Enumerable<String> {
 
-	public static final Path EMPTY_PATH = Path.builder().build();
+	public static final Path EMPTY_PATH = new ArrayPath(Collections.<String>emptyList());
 	public static final char SEPERATOR = '/';
 
-	public static Path.Builder builder() {
-		return new Builder();
-	}
-	
 	public abstract Path pop();
 	
 	public static Path fromString(String string) {
-		return builder().addElement(StringUtils.split(string, SEPERATOR)).build();
+		return new ArrayPath(Arrays.asList(StringUtils.split(string, SEPERATOR)));
 	}
 	
 	public static Path fromUri(URI uri) {
 		return fromString(uri.getPath());
 	}
 	
-	public static class Builder {
+	public abstract int size();
 
-		private final ArrayList<String> elements = new ArrayList<String>();
-
-		private Builder() {
-		}
-
-		public Builder addElement(String element) {
-			elements.add(element);
-			return this;
-		}
-
-		public Builder addElement(String... elements) {
-			return addElement(elements, 0, elements.length);
-		}
-
-		public Builder addElement(String[] elements, int offset, int length) {
-			for (; offset < length; ++offset) {
-				this.elements.add(elements[offset]);
-			}
-			return this;
-		}
-
-		public Path build() {
-			return new ArrayPath(elements.toArray(new String[elements.size()]));
-		}
-
+	/**
+	 * @param size the number of elements to return
+	 * @return a {@link Path} containing the first {@link size} elements
+	 */
+	public abstract Path first(int size);
+	
+	@Override
+	public abstract boolean equals(Object obj);
+	
+	@Override
+	public String toString() {
+		return StringUtils.join(this.iterator(), SEPERATOR);
 	}
 }

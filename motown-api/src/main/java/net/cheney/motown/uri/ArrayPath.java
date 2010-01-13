@@ -1,22 +1,32 @@
 package net.cheney.motown.uri;
 
-import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 public class ArrayPath extends Path {
 
-	private String[] content;
-
-	protected ArrayPath(String[] array) {
-		this.content = array;
+	private final List<String> elements;
+	
+	ArrayPath(Iterable<String> elements) {
+		this.elements = Lists.newArrayList(elements);
+	}
+	
+	@Override
+	public Path pop() {
+		return new ArrayPath(Lists.partition(elements, 1).get(1));
 	}
 
 	@Override
-	public Path pop() {
-		// TODO Auto-generated method stub
-		return null;
+	public int size() {
+		return elements.size();
+	}
+
+	@Override
+	public Path first(int size) {
+		return new ArrayPath(Lists.partition(elements, size).get(0));
 	}
 
 	@Override
@@ -27,24 +37,25 @@ public class ArrayPath extends Path {
 
 	@Override
 	public String first() {
-		// TODO Auto-generated method stub
-		return null;
+		return Iterables.get(elements, 0);
 	}
 
 	@Override
 	public String last() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public String toString() {
-		return StringUtils.join(this.iterator(), SEPERATOR);
+		return Iterables.getLast(elements);
 	}
 
 	@Override
 	public Iterator<String> iterator() {
-		return Arrays.asList(this.content).iterator();
+		return elements.iterator();
+	}
+
+	@Override
+	public boolean equals(Object that) {
+		if(that instanceof Path && ((Path)that).size() == size()) {
+			return Iterables.elementsEqual(this, ((Path)that));
+		}
+		return false;
 	}
 
 }
