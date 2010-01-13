@@ -8,7 +8,6 @@ import java.net.SocketAddress;
 import net.cheney.motown.dispatcher.Dispatcher;
 import net.cheney.motown.dispatcher.ResourceFactory;
 import net.cheney.motown.dispatcher.ResourceHandler;
-import net.cheney.motown.dispatcher.SingletonResourceFactory;
 import net.cheney.motown.dispatcher.dynamic.DynamicResourceHandler;
 import net.cheney.motown.protocol.http.async.HttpServerProtocolFactory;
 import net.cheney.motown.resource.api.ResourceProvidor;
@@ -39,8 +38,7 @@ public class Startup {
 
 			ResourceController controller = new ResourceController(providor);
 
-			ResourceFactory resourceFactory = new SingletonResourceFactory(
-					controller);
+			ResourceFactory resourceFactory = ResourceFactory.factoryForResource(controller);
 			ResourceHandler resourceHandler = new DynamicResourceHandler(
 					resourceFactory);
 
