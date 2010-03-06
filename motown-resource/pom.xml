@@ -20,7 +20,7 @@
 		</dependency>
 		<dependency>
 			<groupId>net.cheney.snax</groupId>
-			<artifactId>snax</artifactId>
+			<artifactId>snax-core</artifactId>
 		</dependency>
 	</dependencies>
 </project>

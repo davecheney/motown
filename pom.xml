@@ -50,12 +50,12 @@
 		<dependencies>
 			<dependency>
 				<groupId>net.cheney.rev</groupId>
-				<artifactId>rev</artifactId>
+				<artifactId>rev-core</artifactId>
 				<version>0.2-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>net.cheney.snax</groupId>
-				<artifactId>snax</artifactId>
+				<artifactId>snax-core</artifactId>
 				<version>0.4-SNAPSHOT</version>
 			</dependency>
 		</dependencies>

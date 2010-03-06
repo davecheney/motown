@@ -21,7 +21,7 @@
 		</dependency>
 		<dependency>
 			<groupId>net.cheney.rev</groupId>
-			<artifactId>rev</artifactId>
+			<artifactId>rev-core</artifactId>
 		</dependency>
 	</dependencies>
 </project>
