@@ -25,6 +25,7 @@
 		<module>motown-router</module>
 		<module>motown-common</module>
 		<module>motown-client</module>
+		<module>motown-server</module>
 	</modules>
 
 	<scm>
