@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import net.cheney.motown.api.MimeType;
+import net.cheney.motown.common.api.MimeType;
 
 @Inherited
 @Target({ElementType.TYPE, ElementType.METHOD})

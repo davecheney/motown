@@ -5,8 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import net.cheney.motown.api.Request;
-import net.cheney.motown.api.Response;
+import net.cheney.motown.common.api.Request;
+import net.cheney.motown.common.api.Response;
 import net.cheney.motown.dispatcher.ResourceMethod;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;

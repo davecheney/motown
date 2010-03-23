@@ -5,17 +5,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.cheney.motown.common.api.Request;
+import net.cheney.motown.common.api.Response;
+import net.cheney.motown.common.api.Message.Method;
+import net.cheney.motown.dispatcher.ResourceFactory;
+import net.cheney.motown.dispatcher.ResourceHandler;
+import net.cheney.motown.dispatcher.ResourceMethod;
+
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-
-import net.cheney.motown.api.Method;
-import net.cheney.motown.api.Request;
-import net.cheney.motown.api.Response;
-import net.cheney.motown.dispatcher.ResourceFactory;
-import net.cheney.motown.dispatcher.ResourceHandler;
-import net.cheney.motown.dispatcher.ResourceMethod;
 
 public class DynamicResourceHandler implements ResourceHandler {
 

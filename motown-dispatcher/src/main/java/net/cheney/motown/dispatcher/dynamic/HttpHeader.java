@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import net.cheney.motown.api.Header;
+import net.cheney.motown.common.api.Header;
 
 @Inherited
 @Target(ElementType.PARAMETER)

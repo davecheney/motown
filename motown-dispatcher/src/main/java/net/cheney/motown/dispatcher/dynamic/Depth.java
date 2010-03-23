@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Depth {
 
-	net.cheney.motown.api.Depth value();
+	net.cheney.motown.common.api.Depth value();
 
 }

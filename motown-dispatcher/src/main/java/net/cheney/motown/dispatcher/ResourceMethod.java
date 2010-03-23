@@ -1,7 +1,7 @@
 package net.cheney.motown.dispatcher;
 
-import net.cheney.motown.api.Request;
-import net.cheney.motown.api.Response;
+import net.cheney.motown.common.api.Request;
+import net.cheney.motown.common.api.Response;
 
 public interface ResourceMethod {
 

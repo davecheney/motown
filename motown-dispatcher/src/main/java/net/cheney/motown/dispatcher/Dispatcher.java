@@ -1,7 +1,7 @@
 package net.cheney.motown.dispatcher;
 
-import net.cheney.motown.api.Request;
-import net.cheney.motown.api.Response;
+import net.cheney.motown.common.api.Request;
+import net.cheney.motown.common.api.Response;
 import net.cheney.motown.protocol.common.HttpRequestHandler;
 import net.cheney.motown.protocol.common.HttpResponseHandler;
 
