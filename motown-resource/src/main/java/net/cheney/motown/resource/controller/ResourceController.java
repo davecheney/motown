@@ -1,28 +1,27 @@
 package net.cheney.motown.resource.controller;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static net.cheney.motown.api.Depth.INFINITY;
-import static net.cheney.motown.api.Depth.ZERO;
-import static net.cheney.motown.api.Header.ALLOW;
-import static net.cheney.motown.api.Header.CONTENT_TYPE;
-import static net.cheney.motown.api.Header.DAV;
-import static net.cheney.motown.api.Header.IF_MODIFIED_SINCE;
-import static net.cheney.motown.api.Header.LOCK_TOKEN;
-import static net.cheney.motown.api.MimeType.APPLICATION_OCTET_STREAM;
-import static net.cheney.motown.api.MimeType.APPLICATION_XML;
-import static net.cheney.motown.api.Response.clientErrorConflict;
-import static net.cheney.motown.api.Response.clientErrorLocked;
-import static net.cheney.motown.api.Response.clientErrorMethodNotAllowed;
-import static net.cheney.motown.api.Response.clientErrorNotFound;
-import static net.cheney.motown.api.Response.clientErrorPreconditionFailed;
-import static net.cheney.motown.api.Response.clientErrorUnsupportedMediaType;
-import static net.cheney.motown.api.Response.redirectionNotModified;
-import static net.cheney.motown.api.Response.serverErrorInternal;
-import static net.cheney.motown.api.Response.serverErrorNotImplemented;
-import static net.cheney.motown.api.Response.successCreated;
-import static net.cheney.motown.api.Response.successNoContent;
-import static net.cheney.motown.api.Status.SUCCESS_MULTI_STATUS;
-import static net.cheney.motown.api.Status.SUCCESS_OK;
+import static net.cheney.motown.common.api.Depth.ZERO;
+import static net.cheney.motown.common.api.Header.ALLOW;
+import static net.cheney.motown.common.api.Header.CONTENT_TYPE;
+import static net.cheney.motown.common.api.Header.DAV;
+import static net.cheney.motown.common.api.Header.IF_MODIFIED_SINCE;
+import static net.cheney.motown.common.api.Header.LOCK_TOKEN;
+import static net.cheney.motown.common.api.MimeType.APPLICATION_OCTET_STREAM;
+import static net.cheney.motown.common.api.MimeType.APPLICATION_XML;
+import static net.cheney.motown.common.api.Response.clientErrorConflict;
+import static net.cheney.motown.common.api.Response.clientErrorLocked;
+import static net.cheney.motown.common.api.Response.clientErrorMethodNotAllowed;
+import static net.cheney.motown.common.api.Response.clientErrorNotFound;
+import static net.cheney.motown.common.api.Response.clientErrorPreconditionFailed;
+import static net.cheney.motown.common.api.Response.clientErrorUnsupportedMediaType;
+import static net.cheney.motown.common.api.Response.redirectionNotModified;
+import static net.cheney.motown.common.api.Response.serverErrorInternal;
+import static net.cheney.motown.common.api.Response.serverErrorNotImplemented;
+import static net.cheney.motown.common.api.Response.successCreated;
+import static net.cheney.motown.common.api.Response.successNoContent;
+import static net.cheney.motown.common.api.Status.SUCCESS_MULTI_STATUS;
+import static net.cheney.motown.common.api.Status.SUCCESS_OK;
 import static net.cheney.motown.resource.api.Elements.activeLock;
 import static net.cheney.motown.resource.api.Elements.href;
 import static net.cheney.motown.resource.api.Elements.lockDiscovery;
@@ -45,16 +44,16 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import net.cheney.motown.api.Header;
-import net.cheney.motown.api.Message;
-import net.cheney.motown.api.Method;
-import net.cheney.motown.api.Request;
-import net.cheney.motown.api.Response;
-import net.cheney.motown.api.Status;
+import net.cheney.motown.common.api.Depth;
+import net.cheney.motown.common.api.Header;
+import net.cheney.motown.common.api.Message;
+import net.cheney.motown.common.api.Request;
+import net.cheney.motown.common.api.Response;
+import net.cheney.motown.common.api.Status;
+import net.cheney.motown.common.api.Message.Method;
 import net.cheney.motown.dispatcher.dynamic.COPY;
 import net.cheney.motown.dispatcher.dynamic.Context;
 import net.cheney.motown.dispatcher.dynamic.DELETE;
-import net.cheney.motown.dispatcher.dynamic.Depth;
 import net.cheney.motown.dispatcher.dynamic.Fragment;
 import net.cheney.motown.dispatcher.dynamic.GET;
 import net.cheney.motown.dispatcher.dynamic.LOCK;
@@ -77,10 +76,10 @@ import net.cheney.motown.resource.api.Elements.PROPSTAT;
 import net.cheney.motown.resource.api.Elements.RESPONSE;
 import net.cheney.motown.resource.api.Resource.ComplianceClass;
 import net.cheney.motown.uri.Path;
+import net.cheney.snax.SNAX;
 import net.cheney.snax.model.Document;
 import net.cheney.snax.model.Element;
 import net.cheney.snax.model.QName;
-import net.cheney.snax.parser.XMLBuilder;
 import net.cheney.snax.writer.XMLWriter;
 
 import org.apache.log4j.Logger;
@@ -303,7 +302,7 @@ public class ResourceController {
 	}
 	
 	@LOCK
-	public Message lock(@PathTranslated Path path, @Depth(INFINITY) net.cheney.motown.api.Depth depth) throws IOException {
+	public Message lock(@PathTranslated Path path, Depth depth) throws IOException {
 		final Resource resource = resolveResource(path);
 
 		if (resource.exists()) {
@@ -532,7 +531,7 @@ public class ResourceController {
 	}
 	
 	@PROPPATCH
-	public Message proppatch(@PathTranslated Path path, @Context Request request, @Depth(INFINITY) net.cheney.motown.api.Depth depth) throws IOException {
+	public Message proppatch(@PathTranslated Path path, @Context Request request, Depth depth) throws IOException {
 		final Resource resource = resolveResource(path);
 		final Iterable<QName> properties = getProperties(request.buffer());
 		final List<RESPONSE> responses = propfind(properties, resource, depth);
@@ -545,11 +544,11 @@ public class ResourceController {
 	}
 
 	@PROPFIND
-	public Message propfind(@PathTranslated Path path, @Depth(INFINITY) net.cheney.motown.api.Depth depth, @Context Request request) throws IOException {
+	public Message propfind(@PathTranslated Path path, Depth depth, @Context Request request) throws IOException {
 		return propfind(path, depth, request.buffer());
 	}
 
-	private Message propfind(Path path, net.cheney.motown.api.Depth depth, ByteBuffer body) throws IOException {
+	private Message propfind(Path path, Depth depth, ByteBuffer body) throws IOException {
 		final Resource resource = resolveResource(path);
 
 			final Iterable<QName> properties = getProperties(body);
@@ -561,7 +560,7 @@ public class ResourceController {
 			}
 	}
 
-	private final List<RESPONSE> propfind(final Iterable<QName> properties, final Resource resource, final net.cheney.motown.api.Depth depth) {
+	private final List<RESPONSE> propfind(final Iterable<QName> properties, final Resource resource, final Depth depth) {
 		final List<RESPONSE> responses = new ArrayList<RESPONSE>();
 		
 		responses.add(response(href(relativizeResource(resource)), getProperties(resource, properties)));
@@ -597,7 +596,7 @@ public class ResourceController {
 	private final Iterable<QName> getProperties(final ByteBuffer buffer) throws IOException {
 		final Document doc = getPropfind(buffer);
 		final Element propfind = doc.rootElement();
-		final Element props = propfind.getFirstChild(Elements.PROP);
+		final Element props = propfind.getChildren(Elements.PROP).first();
 		if (props == null || !props.hasChildren()) {
 			return ALL_PROPS;
 		} else {
@@ -611,8 +610,7 @@ public class ResourceController {
 	}
 
 	private final Document getPropfind(final ByteBuffer buffer) throws IOException {
-		XMLBuilder builder = new XMLBuilder();
-		Document document = builder.build(buffer, CHARSET_UTF_8);
+		Document document = SNAX.parse(CHARSET_UTF_8.decode(buffer));
 		LOG.debug("Request Body: "+XMLWriter.write(document));
 		return document;
 	}

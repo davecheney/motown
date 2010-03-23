@@ -25,10 +25,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import net.cheney.motown.api.Status;
-import net.cheney.motown.api.Depth;
-import net.cheney.motown.api.MimeType;
-import net.cheney.motown.api.Version;
+import net.cheney.motown.common.api.Depth;
+import net.cheney.motown.common.api.MimeType;
+import net.cheney.motown.common.api.Status;
+import net.cheney.motown.common.api.Version;
 import net.cheney.motown.resource.api.Lock.Scope;
 import net.cheney.motown.resource.api.Lock.Type;
 import net.cheney.snax.model.Element;

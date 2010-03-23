@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import net.cheney.motown.api.Method;
+import net.cheney.motown.common.api.Message.Method;
 import net.cheney.motown.resource.api.Lock.Scope;
 import net.cheney.motown.resource.api.Lock.Type;
 import net.cheney.snax.model.Element;
