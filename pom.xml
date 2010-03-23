@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>net.cheney</groupId>
 		<artifactId>cheney-base-pom</artifactId>
-		<version>3-SNAPSHOT</version>
+		<version>4</version>
 	</parent>
 
 	<groupId>net.cheney.motown</groupId>
@@ -21,6 +21,8 @@
 		<module>motown-dispatcher</module>
 		<module>motown-resource</module>
 		<module>motown-example</module>
+		<module>motown-controller</module>
+		<module>motown-router</module>
 	</modules>
 
 	<scm>
@@ -56,7 +58,7 @@
 			<dependency>
 				<groupId>net.cheney.snax</groupId>
 				<artifactId>snax-core</artifactId>
-				<version>0.4-SNAPSHOT</version>
+				<version>0.4.1-SNAPSHOT</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
