@@ -13,9 +13,9 @@
   
   <dependencies>
   	<dependency>
-  		<groupId>net.cheney.http</groupId>
-  		<artifactId>http-core-api</artifactId>
-  		<version>0.1-SNAPSHOT</version>
+  		<groupId>net.cheney.motown</groupId>
+  		<artifactId>motown-common-api</artifactId>
+  		<version>1.0-SNAPSHOT</version>
   	</dependency>
   </dependencies>
   

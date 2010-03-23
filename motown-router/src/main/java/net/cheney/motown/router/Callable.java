@@ -1,7 +1,7 @@
 package net.cheney.motown.router;
 
-import net.cheney.http.core.api.Request;
-import net.cheney.http.core.api.Response;
+import net.cheney.motown.common.api.Request;
+import net.cheney.motown.common.api.Response;
 
 public interface Callable {
 
