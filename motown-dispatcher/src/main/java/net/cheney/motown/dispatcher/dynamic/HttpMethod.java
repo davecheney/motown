@@ -5,10 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import net.cheney.motown.api.Method;
-
 @Target(ElementType.ANNOTATION_TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface HttpMethod {
-	Method value();
+	net.cheney.motown.common.api.Message.Method value();
 }

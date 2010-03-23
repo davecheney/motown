@@ -1,6 +1,7 @@
 package net.cheney.motown.dispatcher.dynamic;
 
 import net.cheney.motown.common.api.Request;
+import net.cheney.motown.uri.Path;
 
 public class PathTranslatedParameterInjector extends MethodParameterInjector {
 

@@ -1,16 +1,16 @@
 package net.cheney.motown.dispatcher;
 
-import static net.cheney.motown.api.Version.HTTP_1_1;
+import static net.cheney.motown.common.api.Version.HTTP_1_1;
 import static org.junit.Assert.assertEquals;
 
 import java.net.URISyntaxException;
 
-import net.cheney.motown.api.Message;
-import net.cheney.motown.api.Method;
-import net.cheney.motown.api.Request;
-import net.cheney.motown.api.Response;
-import net.cheney.motown.api.Status;
-import net.cheney.motown.dispatcher.ResourceFactory;
+import net.cheney.motown.common.api.Message;
+import net.cheney.motown.common.api.Request;
+import net.cheney.motown.common.api.Response;
+import net.cheney.motown.common.api.Status;
+import net.cheney.motown.common.api.Version;
+import net.cheney.motown.common.api.Message.Method;
 import net.cheney.motown.dispatcher.dynamic.DynamicResourceHandler;
 import net.cheney.motown.dispatcher.dynamic.GET;
 import net.cheney.motown.protocol.common.HttpResponseHandler;
