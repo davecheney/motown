@@ -2,7 +2,7 @@ package net.cheney.motown.protocol.common;
 
 import javax.annotation.Nonnull;
 
-import net.cheney.motown.api.Request;
+import net.cheney.motown.common.api.Request;
 
 public interface HttpRequestHandler {
 

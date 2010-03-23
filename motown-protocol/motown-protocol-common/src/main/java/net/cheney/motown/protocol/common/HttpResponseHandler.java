@@ -2,7 +2,7 @@ package net.cheney.motown.protocol.common;
 
 import javax.annotation.Nonnull;
 
-import net.cheney.motown.api.Response;
+import net.cheney.motown.common.api.Response;
 
 public interface HttpResponseHandler {
 
