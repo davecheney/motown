@@ -23,6 +23,7 @@
 		<module>motown-example</module>
 		<module>motown-controller</module>
 		<module>motown-router</module>
+		<module>motown-common</module>
 	</modules>
 
 	<scm>
