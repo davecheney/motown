@@ -2,20 +2,21 @@ package net.cheney.motown.protocol.http.async;
 
 import static java.lang.String.format;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.io.IOException;
+
+import net.cheney.motown.common.api.Header;
+import net.cheney.motown.common.api.Request;
+import net.cheney.motown.common.api.Response;
+import net.cheney.motown.common.parser.RequestParser;
+import net.cheney.motown.protocol.common.HttpRequestHandler;
+import net.cheney.motown.protocol.common.HttpResponseHandler;
+import net.cheney.rev.channel.AsyncSocketChannel;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import net.cheney.motown.api.Header;
-import net.cheney.motown.api.Request;
-import net.cheney.motown.api.Response;
-import net.cheney.motown.protocol.common.HttpRequestHandler;
-import net.cheney.motown.protocol.common.HttpResponseHandler;
-import net.cheney.motown.protocol.http.common.RequestParser;
-import net.cheney.rev.channel.AsyncSocketChannel;
 
 public class HttpServerProtocol extends HttpProtocol<Request> implements HttpResponseHandler {
 	private static final Logger LOG = Logger.getLogger(HttpServerProtocol.class);

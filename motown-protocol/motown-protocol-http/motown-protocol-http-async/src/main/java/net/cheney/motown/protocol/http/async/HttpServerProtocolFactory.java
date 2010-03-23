@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
-import net.cheney.motown.api.Request;
+import net.cheney.motown.common.api.Request;
 import net.cheney.motown.protocol.common.HttpRequestHandler;
 import net.cheney.rev.channel.AsyncSocketChannel;
 import net.cheney.rev.protocol.ServerProtocolFactory;

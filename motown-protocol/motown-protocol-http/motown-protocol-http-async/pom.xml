@@ -12,16 +12,26 @@
 	<artifactId>motown-protocol-http-async</artifactId>
 
 	<name>Motown HTTP Protocol Async Support</name>
-
 	<dependencies>
 		<dependency>
-			<groupId>net.cheney.motown</groupId>
-			<artifactId>motown-protocol-http-common</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.cheney.rev</groupId>
-			<artifactId>rev-core</artifactId>
+			<artifactId>rev</artifactId>
+			<version>0.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>net.cheney.motown</groupId>
+			<artifactId>motown-common-parser</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>net.cheney.motown</groupId>
+			<artifactId>motown-protocol-common</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
+
 </project>

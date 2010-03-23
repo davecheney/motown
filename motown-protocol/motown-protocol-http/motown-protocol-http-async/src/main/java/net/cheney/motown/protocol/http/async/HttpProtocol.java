@@ -1,16 +1,16 @@
 package net.cheney.motown.protocol.http.async;
 
 import static java.lang.Integer.parseInt;
-import static net.cheney.motown.api.Header.CONTENT_LENGTH;
+import static net.cheney.motown.common.api.Header.CONTENT_LENGTH;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 
-import net.cheney.motown.api.Message;
-import net.cheney.motown.protocol.http.common.BodyHandler;
-import net.cheney.motown.protocol.http.common.HttpParser;
+import net.cheney.motown.common.api.Message;
+import net.cheney.motown.common.parser.BodyHandler;
+import net.cheney.motown.common.parser.HttpParser;
 import net.cheney.rev.channel.AsyncSocketChannel;
 import net.cheney.rev.protocol.Protocol;
 
