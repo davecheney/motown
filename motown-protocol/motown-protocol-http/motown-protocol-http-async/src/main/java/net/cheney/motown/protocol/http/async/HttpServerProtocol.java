@@ -10,27 +10,28 @@ import net.cheney.motown.common.api.Header;
 import net.cheney.motown.common.api.Request;
 import net.cheney.motown.common.api.Response;
 import net.cheney.motown.common.parser.RequestParser;
-import net.cheney.motown.protocol.common.HttpRequestHandler;
-import net.cheney.motown.protocol.common.HttpResponseHandler;
+import net.cheney.motown.server.api.Application;
+//import net.cheney.motown.protocol.common.HttpRequestHandler;
+//import net.cheney.motown.protocol.common.HttpResponseHandler;
 import net.cheney.rev.channel.AsyncSocketChannel;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
-public class HttpServerProtocol extends HttpProtocol<Request> implements HttpResponseHandler {
+public class HttpServerProtocol extends HttpProtocol<Request>  {
 	private static final Logger LOG = Logger.getLogger(HttpServerProtocol.class);
 	
-	private final HttpRequestHandler handler;
+	private final Adapter handler;
 	
-	public HttpServerProtocol(final AsyncSocketChannel channel, final HttpRequestHandler handler) {
+	public HttpServerProtocol(final AsyncSocketChannel channel, final Application app) {
 		super(channel, new RequestParser());
-		this.handler = handler; 
+		this.handler = new Adapter(app, this);
 	}
 
 	@Override
 	final void onMessage(final Request request) {
-		handler.handleRequest(request, this);
+		handler.handleRequest(request);
 	}
 	
 	public final void sendResponse(final Response response, boolean requestClose) {

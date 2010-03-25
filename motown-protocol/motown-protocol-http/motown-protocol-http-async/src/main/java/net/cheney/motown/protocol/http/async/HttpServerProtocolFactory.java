@@ -5,15 +5,15 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 
 import net.cheney.motown.common.api.Request;
-import net.cheney.motown.protocol.common.HttpRequestHandler;
+import net.cheney.motown.server.api.Application;
 import net.cheney.rev.channel.AsyncSocketChannel;
 import net.cheney.rev.protocol.ServerProtocolFactory;
 
 public class HttpServerProtocolFactory extends ServerProtocolFactory {
 	
-	private final HttpRequestHandler handler;
+	private final Application handler;
 
-	public HttpServerProtocolFactory(@Nonnull HttpRequestHandler handler) {
+	public HttpServerProtocolFactory(@Nonnull Application handler) {
 		this.handler = handler;
 	}
 
