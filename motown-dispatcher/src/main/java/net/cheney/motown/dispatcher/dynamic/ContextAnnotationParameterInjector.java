@@ -1,6 +1,6 @@
 package net.cheney.motown.dispatcher.dynamic;
 
-import net.cheney.motown.common.api.Request;
+import net.cheney.motown.server.api.Environment;
 
 public class ContextAnnotationParameterInjector extends MethodParameterInjector {
 
@@ -10,11 +10,8 @@ public class ContextAnnotationParameterInjector extends MethodParameterInjector 
 		this.paramType = paramType;
 	}
 	
-	public Object injectParameter(Request request) {
-		if(paramType.equals(Request.class)) {
-			return request;
-		} else {
-			return null;
-		}
+	@Override
+	public Object injectParameter(Environment env) {
+		return null; // TODO
 	}
 }

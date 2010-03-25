@@ -1,13 +1,13 @@
 package net.cheney.motown.dispatcher.dynamic;
 
-import net.cheney.motown.common.api.Request;
+import net.cheney.motown.server.api.Environment;
 import net.cheney.motown.uri.Path;
 
 public class PathTranslatedParameterInjector extends MethodParameterInjector {
 
 	@Override
-	public Object injectParameter(Request request) {
-		return Path.fromString(request.uri().getPath());
+	public Object injectParameter(Environment env) {
+		return Path.fromString(env.uri().getPath());
 	}
 
 }

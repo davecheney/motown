@@ -1,12 +1,14 @@
 package net.cheney.motown.dispatcher.dynamic;
 
-import net.cheney.motown.common.api.Request;
+import javax.annotation.Nonnull;
+
+import net.cheney.motown.server.api.Environment;
 
 public class FragmentParameterInjector extends MethodParameterInjector {
 
 	@Override
-	public String injectParameter(Request request) {
-		return request.uri().getFragment();
+	public String injectParameter(@Nonnull Environment env) {
+		return env.uri().getFragment();
 	}
 
 }

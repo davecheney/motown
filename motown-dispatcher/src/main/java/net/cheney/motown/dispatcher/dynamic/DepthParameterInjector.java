@@ -1,6 +1,6 @@
 package net.cheney.motown.dispatcher.dynamic;
 
-import net.cheney.motown.common.api.Request;
+import net.cheney.motown.server.api.Environment;
 
 public class DepthParameterInjector extends MethodParameterInjector {
 
@@ -11,8 +11,8 @@ public class DepthParameterInjector extends MethodParameterInjector {
 	}
 	
 	@Override
-	public net.cheney.motown.common.api.Depth injectParameter(Request request) {
-		return request.getDepth(defaultDepth);
+	public net.cheney.motown.common.api.Depth injectParameter(Environment env) {
+		return env.getDepth(defaultDepth);
 	}
 
 }

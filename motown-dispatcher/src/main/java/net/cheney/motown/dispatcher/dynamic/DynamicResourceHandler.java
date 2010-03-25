@@ -5,19 +5,19 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.cheney.motown.common.api.Request;
 import net.cheney.motown.common.api.Response;
 import net.cheney.motown.common.api.Message.Method;
 import net.cheney.motown.dispatcher.ResourceFactory;
-import net.cheney.motown.dispatcher.ResourceHandler;
 import net.cheney.motown.dispatcher.ResourceMethod;
+import net.cheney.motown.server.api.Application;
+import net.cheney.motown.server.api.Environment;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-public class DynamicResourceHandler implements ResourceHandler {
+public class DynamicResourceHandler implements Application {
 
 	private final ResourceFactory factory;
 	private final Map<Method, ResourceMethod> resourceMethods;
@@ -26,10 +26,11 @@ public class DynamicResourceHandler implements ResourceHandler {
 		this.factory = factory;
 		this.resourceMethods = buildResourceMethods();
 	}
-
-	public final Response dispatch(final Request request) {
-		final ResourceMethod resourceMethod = resourceMethods.get(request.method());
-		return resourceMethod == null ? Response.serverErrorNotImplemented() : resourceMethod.invoke(factory.resource(), request);
+	
+	@Override
+	public Response call(Environment env) {
+		final ResourceMethod resourceMethod = resourceMethods.get(env.method());
+		return resourceMethod == null ? Response.serverErrorNotImplemented() : resourceMethod.invoke(factory.resource(), env);
 	}
 
 	private Map<Method, ResourceMethod> buildResourceMethods() {

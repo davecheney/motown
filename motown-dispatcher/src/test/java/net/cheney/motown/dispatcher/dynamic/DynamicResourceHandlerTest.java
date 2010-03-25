@@ -9,9 +9,9 @@ import net.cheney.motown.common.api.Message;
 import net.cheney.motown.common.api.Request;
 import net.cheney.motown.common.api.Response;
 import net.cheney.motown.common.api.Status;
-import net.cheney.motown.common.api.Version;
 import net.cheney.motown.common.api.Message.Method;
 import net.cheney.motown.dispatcher.ResourceFactory;
+import net.cheney.motown.server.api.Environment;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -42,7 +42,7 @@ public class DynamicResourceHandlerTest {
 	@Test
 	public void testGET() throws URISyntaxException {
 		Request request = new Request(Method.GET, "/", HTTP_1_1);
-		Response response = handler.dispatch(request);
+		Response response = handler.call(Environment.fromRequest(request));
 		
 		assertTrue(response.status().equals(Status.SUCCESS_NO_CONTENT));
 	}
@@ -50,7 +50,7 @@ public class DynamicResourceHandlerTest {
 	@Test
 	public void testNotImplemented() throws URISyntaxException {
 		Request request = new Request(Method.PUT, "/", HTTP_1_1);
-		Response response = handler.dispatch(request);
+		Response response = handler.call(Environment.fromRequest(request));
 		
 		assertTrue(response.status().equals(Status.SERVER_ERROR_NOT_IMPLEMENTED));
 	}

@@ -16,6 +16,5 @@
 
 	<modules>
 		<module>motown-protocol-http</module>
-		<module>motown-protocol-common</module>
 	</modules>
 </project>

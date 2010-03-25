@@ -5,14 +5,13 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
-import net.cheney.motown.dispatcher.Dispatcher;
 import net.cheney.motown.dispatcher.ResourceFactory;
-import net.cheney.motown.dispatcher.ResourceHandler;
 import net.cheney.motown.dispatcher.dynamic.DynamicResourceHandler;
 import net.cheney.motown.protocol.http.async.HttpServerProtocolFactory;
 import net.cheney.motown.resource.api.ResourceProvidor;
 import net.cheney.motown.resource.controller.ResourceController;
 import net.cheney.motown.resource.file.FileResourceProvidor;
+import net.cheney.motown.server.api.Application;
 import net.cheney.rev.protocol.ServerProtocolFactory;
 import net.cheney.rev.reactor.Reactor;
 
@@ -39,14 +38,11 @@ public class Startup {
 			ResourceController controller = new ResourceController(providor);
 
 			ResourceFactory resourceFactory = ResourceFactory.factoryForResource(controller);
-			ResourceHandler resourceHandler = new DynamicResourceHandler(
-					resourceFactory);
-
-			Dispatcher dispatcher = new Dispatcher(resourceHandler);
+			
+			Application app = new DynamicResourceHandler(resourceFactory);
 
 			SocketAddress addr = createSocketAddressFromCommandLine(line);
-			ServerProtocolFactory factory = new HttpServerProtocolFactory(
-					dispatcher);
+			ServerProtocolFactory factory = new HttpServerProtocolFactory(app);
 
 			System.out.println("Listening on: "+addr);
 			System.out.println("Publishing root: "+getDocumentRootFromCommandLine(line));

@@ -5,9 +5,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import net.cheney.motown.common.api.Request;
 import net.cheney.motown.common.api.Response;
 import net.cheney.motown.dispatcher.ResourceMethod;
+import net.cheney.motown.server.api.Environment;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -17,16 +17,16 @@ public class DynamicResourceMethod implements ResourceMethod {
 	private static final Logger LOG = Logger.getLogger(DynamicResourceMethod.class);
 
 	private final Method method;
-	private final ParameterInjector<Request>[] paramInjectors;
+	private final ParameterInjector[] paramInjectors;
 
 	public DynamicResourceMethod(Method method) {
 		this.method = method;
 		this.paramInjectors = buildParamInjectors();
 	}
 	
-	private ParameterInjector<Request>[] buildParamInjectors() {
+	private ParameterInjector[] buildParamInjectors() {
 		final Class<?>[] params = method.getParameterTypes();
-		final ParameterInjector<Request>[] args = new ParameterInjector[params.length];
+		final ParameterInjector[] args = new ParameterInjector[params.length];
 		final Annotation[][] paramAnnotations = method.getParameterAnnotations();
 		for(int i = 0 ; i < params.length ; ++i) {
 			for(Annotation a : paramAnnotations[i]) {
@@ -47,15 +47,16 @@ public class DynamicResourceMethod implements ResourceMethod {
 		return args;
 	}
 
-	public Response invoke(Object resource, Request request) {
-		LOG.info(String.format("%s %s %s %s", request.method(), request.uri(), request.version(), request.headers()));
-		Response response = invoke0(resource, request);
+	@Override
+	public Response invoke(Object resource, Environment env) {
+		LOG.info(String.format("%s %s %s %s", env.method(), env.uri(), env.version(), env.headers()));
+		Response response = invoke0(resource, env);
 		LOG.info(String.format("%s %s %s %s", response.version(), response.status().code(), response.status().reason(), response.headers()));
 		return response;
 	}
 
-	private Response invoke0(Object resource, Request request) {
-		final Object args[] = injectParameters(request);
+	private Response invoke0(Object resource, Environment env) {
+		final Object args[] = injectParameters(env);
 		try {
 			LOG.debug(String.format("Invoking %s(%s)",method.getName(),Arrays.asList(args).toString()));
 			return (Response) method.invoke(resource, args);
@@ -71,10 +72,10 @@ public class DynamicResourceMethod implements ResourceMethod {
 		}		
 	}
 
-	private final Object[] injectParameters(final Request request) {
+	private final Object[] injectParameters(final Environment env) {
 		final Object[] args = new Object[paramInjectors.length];
 		for(int i = 0 ; i < paramInjectors.length ; ++i) {
-			args[i] = paramInjectors[i].injectParameter(request);
+			args[i] = paramInjectors[i].injectParameter(env);
 		}
 		return args;
 	}
