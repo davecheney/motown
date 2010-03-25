@@ -12,9 +12,8 @@
   <dependencies>
   	<dependency>
   		<groupId>net.cheney.motown</groupId>
-  		<artifactId>motown-protocol-http-common</artifactId>
+  		<artifactId>motown-common-parser</artifactId>
   		<version>1.0-SNAPSHOT</version>
   	</dependency>
   </dependencies>
-  
 </project>
