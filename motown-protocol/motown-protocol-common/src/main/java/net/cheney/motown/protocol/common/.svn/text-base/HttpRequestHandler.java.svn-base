@@ -1,9 +1,0 @@
-package net.cheney.motown.protocol.common;
-
-import net.cheney.motown.http.Request;
-
-public interface HttpRequestHandler {
-
-	void handleRequest(Request request, HttpResponseHandler responseHandler);
-	
-}
