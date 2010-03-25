@@ -24,7 +24,7 @@ public class HttpServerProtocol extends HttpProtocol<Request>  {
 	
 	private final Adapter handler;
 	
-	public HttpServerProtocol(final AsyncSocketChannel channel, final Application app) {
+	HttpServerProtocol(final AsyncSocketChannel channel, final Application app) {
 		super(channel, new RequestParser());
 		this.handler = new Adapter(app, this);
 	}

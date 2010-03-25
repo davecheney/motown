@@ -11,15 +11,15 @@ import net.cheney.rev.protocol.ServerProtocolFactory;
 
 public class HttpServerProtocolFactory extends ServerProtocolFactory {
 	
-	private final Application handler;
+	private final Application application;
 
-	public HttpServerProtocolFactory(@Nonnull Application handler) {
-		this.handler = handler;
+	public HttpServerProtocolFactory(@Nonnull Application app) {
+		this.application = app;
 	}
 
 	@Override
 	public void onAccept(final AsyncSocketChannel channel) {
-		final HttpProtocol<Request> protocol = new HttpServerProtocol(channel, handler);
+		final HttpProtocol<Request> protocol = new HttpServerProtocol(channel, application);
 		try {
 			protocol.onConnect();
 		} catch (IOException e) {
@@ -30,9 +30,8 @@ public class HttpServerProtocolFactory extends ServerProtocolFactory {
 	private void closeQuietly(AsyncSocketChannel channel) {
 		try {
 			channel.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (IOException ignored) { 
+			
 		}
 	}
 
