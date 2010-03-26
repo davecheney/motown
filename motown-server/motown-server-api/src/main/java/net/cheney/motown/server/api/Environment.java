@@ -8,7 +8,7 @@ import net.cheney.motown.common.api.Header;
 import net.cheney.motown.common.api.Request;
 import net.cheney.motown.common.api.Version;
 import net.cheney.motown.common.api.Message.HeaderAccessor;
-import net.cheney.motown.common.api.Message.Method;
+import net.cheney.motown.common.api.Request.Method;
 
 public abstract class Environment {
 
@@ -34,6 +34,11 @@ public abstract class Environment {
 			public HeaderAccessor<Request> header(Header header) {
 				return req.header(header);
 			}
+			
+			@Override
+			public Multimap<Header, String> headers() {
+				return req.headers();
+			}
 		};
 	}
 
@@ -44,6 +49,8 @@ public abstract class Environment {
 	public abstract URI uri();
 
 	public abstract HeaderAccessor<Request> header(Header header);
+
+	public abstract Multimap<Header, String> headers();
 	
 }
 

@@ -8,5 +8,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.ANNOTATION_TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface HttpMethod {
-	net.cheney.motown.common.api.Message.Method value();
+	net.cheney.motown.common.api.Request.Method value();
 }

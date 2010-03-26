@@ -7,10 +7,7 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.List;
 
-import net.cheney.motown.common.api.Header;
-import net.cheney.motown.common.api.Request;
-import net.cheney.motown.common.api.Version;
-import net.cheney.motown.common.api.Message.Method;
+import net.cheney.motown.common.api.Request.Method;
 
 import org.junit.Test;
 

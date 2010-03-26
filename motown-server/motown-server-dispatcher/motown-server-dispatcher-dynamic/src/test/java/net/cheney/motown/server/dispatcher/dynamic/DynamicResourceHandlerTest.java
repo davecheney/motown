@@ -9,11 +9,9 @@ import net.cheney.motown.common.api.Message;
 import net.cheney.motown.common.api.Request;
 import net.cheney.motown.common.api.Response;
 import net.cheney.motown.common.api.Status;
-import net.cheney.motown.common.api.Message.Method;
+import net.cheney.motown.common.api.Request.Method;
 import net.cheney.motown.server.api.Environment;
 import net.cheney.motown.server.dispatcher.ResourceFactory;
-import net.cheney.motown.server.dispatcher.dynamic.DynamicResourceHandler;
-import net.cheney.motown.server.dispatcher.dynamic.GET;
 
 import org.junit.Before;
 import org.junit.BeforeClass;

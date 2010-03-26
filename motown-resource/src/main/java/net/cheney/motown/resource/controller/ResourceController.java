@@ -50,7 +50,7 @@ import net.cheney.motown.common.api.Message;
 import net.cheney.motown.common.api.Request;
 import net.cheney.motown.common.api.Response;
 import net.cheney.motown.common.api.Status;
-import net.cheney.motown.common.api.Message.Method;
+import net.cheney.motown.common.api.Request.Method;
 import net.cheney.motown.resource.api.Elements;
 import net.cheney.motown.resource.api.Lock;
 import net.cheney.motown.resource.api.Property;
@@ -506,7 +506,7 @@ public class ResourceController {
 	}
 	
 	@MKCOL
-	public Message mkcol(@PathTranslated Path path) {
+	public Message mkcol(@PathTranslated Path path, @Context Request request) {
 		final Resource resource = resolveResource(path);
 		
 		if (request.hasBody()) {

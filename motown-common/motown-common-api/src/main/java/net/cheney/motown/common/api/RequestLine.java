@@ -6,7 +6,7 @@ import java.net.URISyntaxException;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-import net.cheney.motown.common.api.Message.Method;
+import net.cheney.motown.common.api.Request.Method;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
