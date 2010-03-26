@@ -53,10 +53,6 @@ public abstract class Environment {
 
 	public abstract Multimap<Header, String> headers();
 
-	public Depth getDepth(Depth defaultDepth) {
-		return Depth.parse(header(DEPTH).getOnlyElementWithDefault(defaultDepth.toString()), defaultDepth);
-	}
-
 	public abstract HeaderAccessor<Request> header(Header header);
 	
 }

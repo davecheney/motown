@@ -1,5 +1,7 @@
 package net.cheney.motown.server.dispatcher.dynamic;
 
+import net.cheney.motown.common.api.Depth;
+import net.cheney.motown.common.api.Header;
 import net.cheney.motown.server.api.Environment;
 
 public class DepthParameterInjector extends MethodParameterInjector {
@@ -12,7 +14,8 @@ public class DepthParameterInjector extends MethodParameterInjector {
 	
 	@Override
 	public net.cheney.motown.common.api.Depth injectParameter(Environment env) {
-		return env.getDepth(defaultDepth);
+		String depth = env.header(Header.DEPTH).getOnlyElementWithDefault(defaultDepth.toString());
+		return Depth.parse(depth, defaultDepth);
 	}
 
 }

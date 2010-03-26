@@ -1,9 +1,5 @@
 package net.cheney.motown.common.api;
 
-import static net.cheney.motown.common.api.Header.DEPTH;
-import static net.cheney.motown.common.api.Header.DESTINATION;
-import static net.cheney.motown.common.api.Header.OVERWRITE;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -64,18 +60,6 @@ public final class Request extends Message {
 	
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this);
-	}
-	
-	public Depth getDepth(Depth defaultDepth) {
-		return Depth.parse(header(DEPTH).getOnlyElementWithDefault(defaultDepth.toString()), defaultDepth);
-	}
-
-	public URI getDestination() {
-		return URI.create(header(DESTINATION).getOnlyElementWithDefault(""));
-	}
-
-	public boolean isOverwrite() {
-		return header(OVERWRITE).getOnlyElementWithDefault("T").equals("T");
 	}
 	
 }
