@@ -1,10 +1,5 @@
 package net.cheney.motown.server.dispatcher.dynamic;
 
-import static net.cheney.motown.common.api.Header.DESTINATION;
-import static net.cheney.motown.common.api.Header.OVERWRITE;
-
-import java.net.URI;
-
 import net.cheney.motown.common.api.Header;
 import net.cheney.motown.server.api.Environment;
 
