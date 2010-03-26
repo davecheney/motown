@@ -407,17 +407,14 @@ public class ResourceController {
 	}
 
 	@COPY
-	public Message copy(@PathTranslated Path path, @Context Request request) throws IOException {
+	public Message copy(@PathTranslated Path path, @Destination URI destinationUri, @Overwrite boolean overwrite) throws IOException {
 		final Resource source = resolveResource(path);
 
-		final URI destinationUri = request.getDestination();
 		final Resource destination = resolveResource(Path.fromString(destinationUri.getPath()));
 		
 		if (destination.isLocked()) {
 			return clientErrorLocked();
 		}
-		
-		final boolean overwrite = request.isOverwrite();
 		
 		if (source.exists()) {
 			if (source.isCollection()) { // source exists
@@ -509,7 +506,7 @@ public class ResourceController {
 	}
 	
 	@MKCOL
-	public Message mkcol(@PathTranslated Path path, @Context Request request) {
+	public Message mkcol(@PathTranslated Path path) {
 		final Resource resource = resolveResource(path);
 		
 		if (request.hasBody()) {
