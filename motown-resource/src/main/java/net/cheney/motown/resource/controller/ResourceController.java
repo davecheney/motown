@@ -63,12 +63,14 @@ import net.cheney.motown.resource.api.Elements.RESPONSE;
 import net.cheney.motown.resource.api.Resource.ComplianceClass;
 import net.cheney.motown.server.dispatcher.dynamic.COPY;
 import net.cheney.motown.server.dispatcher.dynamic.DELETE;
+import net.cheney.motown.server.dispatcher.dynamic.Destination;
 import net.cheney.motown.server.dispatcher.dynamic.Fragment;
 import net.cheney.motown.server.dispatcher.dynamic.GET;
 import net.cheney.motown.server.dispatcher.dynamic.LOCK;
 import net.cheney.motown.server.dispatcher.dynamic.MKCOL;
 import net.cheney.motown.server.dispatcher.dynamic.MOVE;
 import net.cheney.motown.server.dispatcher.dynamic.OPTIONS;
+import net.cheney.motown.server.dispatcher.dynamic.Overwrite;
 import net.cheney.motown.server.dispatcher.dynamic.PROPFIND;
 import net.cheney.motown.server.dispatcher.dynamic.PROPPATCH;
 import net.cheney.motown.server.dispatcher.dynamic.PUT;
@@ -352,17 +354,14 @@ public class ResourceController {
 	}
 	
 	@MOVE
-	public Message move(@PathTranslated Path path, @Context Request request) throws IOException {
+	public Message move(@PathTranslated Path path, @Destination URI destinationUri, @Overwrite boolean overwrite) throws IOException {
 		final Resource source = resolveResource(path);
 
-		final URI destinationUri = request.getDestination();
 		final Resource destination = resolveResource(Path.fromString(destinationUri.getPath()));
 		
 		if (destination.isLocked()) {
 			return Response.clientErrorLocked();
 		}
-		
-		final boolean overwrite = request.isOverwrite();
 		
 		if (source.exists()) {
 			if (source.isCollection()) { // source exists

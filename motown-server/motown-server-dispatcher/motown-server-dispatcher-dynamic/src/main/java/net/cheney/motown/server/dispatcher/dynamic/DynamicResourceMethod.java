@@ -39,6 +39,9 @@ public class DynamicResourceMethod implements ResourceMethod {
 				if(a.annotationType().equals(Depth.class)) {
 					args[i] = new DepthParameterInjector(((Depth)a).value());
 				}
+				if(a.annotationType().equals(Destination.class)) {
+					args[i] = new DestinationParameterInjector();
+				}
 			}
 		}
 		return args;
