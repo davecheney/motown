@@ -8,4 +8,11 @@
   <groupId>net.cheney.motown</groupId>
   <artifactId>motown-server-middleware</artifactId>
   <version>1.0-SNAPSHOT</version>
+  <dependencies>
+  	<dependency>
+  		<groupId>net.cheney.motown</groupId>
+  		<artifactId>motown-server-api</artifactId>
+  		<version>1.0-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
 </project>
