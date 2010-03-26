@@ -84,36 +84,36 @@ public final class Response extends Message {
 		return Response.build(SERVER_ERROR_NOT_IMPLEMENTED);
 	}
 
-	public static Message clientErrorNotFound() {
+	public static Response clientErrorNotFound() {
 		return Response.build(CLIENT_ERROR_NOT_FOUND);
 	}
 
-	public static Message clientErrorPreconditionFailed() {
+	public static Response clientErrorPreconditionFailed() {
 		return Response.build(CLIENT_ERROR_PRECONDITION_FAILED);
 	}
 	
-	public static Message clientErrorMethodNotAllowed() {
+	public static Response clientErrorMethodNotAllowed() {
 		return Response.build(CLIENT_ERROR_METHOD_NOT_ALLOWED);
 	}
 	
-	public static Message clientErrorConflict() {
+	public static Response clientErrorConflict() {
 		return Response.build(CLIENT_ERROR_CONFLICT);
 	}
 	
-	public static Message clientErrorLocked() {
+	public static Response clientErrorLocked() {
 		return Response.build(CLIENT_ERROR_LOCKED);
 	}
 
-	public static Message clientErrorUnsupportedMediaType() {
+	public static Response clientErrorUnsupportedMediaType() {
 		return Response.build(CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE);
 	}
 	
-	public static Message redirectionNotModified() {
+	public static Response redirectionNotModified() {
 		return Response.build(REDIRECTION_NOT_MODIFIED);
 	}
 	
 
-	public static Message success(MimeType mime, ByteBuffer buffer) {
+	public static Response success(MimeType mime, ByteBuffer buffer) {
 		return Response.build(SUCCESS_OK).header(CONTENT_TYPE).set(mime.toString()).setBody(buffer);
 	}
 
