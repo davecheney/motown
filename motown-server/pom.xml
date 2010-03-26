@@ -12,5 +12,7 @@
   <name>motown-server</name>
   <modules>
   	<module>motown-server-api</module>
+  	<module>motown-server-dispatcher</module>
+  	<module>motown-server-router</module>
   </modules>
 </project>

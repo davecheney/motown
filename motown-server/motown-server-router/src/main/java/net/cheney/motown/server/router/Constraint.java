@@ -1,4 +1,4 @@
-package net.cheney.motown.router;
+package net.cheney.motown.server.router;
 
 import net.cheney.motown.common.api.Request;
 

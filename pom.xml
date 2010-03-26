@@ -22,7 +22,6 @@
 		<module>motown-resource</module>
 		<module>motown-example</module>
 		<module>motown-controller</module>
-		<module>motown-router</module>
 		<module>motown-common</module>
 		<module>motown-client</module>
 		<module>motown-server</module>

@@ -52,7 +52,6 @@ import net.cheney.motown.common.api.Response;
 import net.cheney.motown.common.api.Status;
 import net.cheney.motown.common.api.Message.Method;
 import net.cheney.motown.dispatcher.dynamic.COPY;
-import net.cheney.motown.dispatcher.dynamic.Context;
 import net.cheney.motown.dispatcher.dynamic.DELETE;
 import net.cheney.motown.dispatcher.dynamic.Fragment;
 import net.cheney.motown.dispatcher.dynamic.GET;

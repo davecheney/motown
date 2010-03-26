@@ -30,9 +30,6 @@ public class DynamicResourceMethod implements ResourceMethod {
 		final Annotation[][] paramAnnotations = method.getParameterAnnotations();
 		for(int i = 0 ; i < params.length ; ++i) {
 			for(Annotation a : paramAnnotations[i]) {
-				if(a.annotationType().equals(Context.class)) {
-					args[i] = new ContextAnnotationParameterInjector(params[i]);
-				}
 				if(a.annotationType().equals(PathTranslated.class)) {
 					args[i] = new PathTranslatedParameterInjector();
 				}
