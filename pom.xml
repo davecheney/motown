@@ -18,7 +18,6 @@
 	<modules>
 		<module>motown-api</module>
 		<module>motown-protocol</module>
-		<module>motown-dispatcher</module>
 		<module>motown-resource</module>
 		<module>motown-example</module>
 		<module>motown-controller</module>
