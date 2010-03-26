@@ -9,7 +9,7 @@ import java.util.Deque;
 
 import net.cheney.motown.common.api.RequestLine;
 import net.cheney.motown.common.api.Version;
-import net.cheney.motown.common.api.Message.Method;
+import net.cheney.motown.common.api.Request.Method;
 
 public class RequestLineParser extends HttpParser<RequestLine> {
 	
