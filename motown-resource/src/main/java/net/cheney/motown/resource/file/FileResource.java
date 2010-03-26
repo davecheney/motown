@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import net.cheney.motown.common.api.Message.Method;
+import net.cheney.motown.common.api.Request.Method;
 import net.cheney.motown.resource.api.Resource;
 
 import org.apache.commons.io.FileUtils;
