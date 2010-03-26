@@ -16,8 +16,8 @@ public class CommonLogger implements Application {
 	private final Application app;
 	private final Writer logger;
 	
-	private final String NCSA_FORMAT = "%s - %s [%s] \"%s %s%s %s\" %d %s %0.4f\n";
-	private final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance("%d/%b/%Y %H:%M:%S");
+	private final String NCSA_FORMAT = "%s - %s [%s] \"%s %s%s %s\" %d %s %d\n";
+	private final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance("dd/mm/yy HH:MM:ss");
 
 	public CommonLogger(Application app, Writer logger) {
 		this.app = app;

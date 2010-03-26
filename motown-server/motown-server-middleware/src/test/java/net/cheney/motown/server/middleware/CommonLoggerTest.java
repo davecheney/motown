@@ -16,6 +16,7 @@ import net.cheney.motown.common.api.Request.Method;
 import net.cheney.motown.server.api.Application;
 import net.cheney.motown.server.api.Environment;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 
 
@@ -41,6 +42,7 @@ public class CommonLoggerTest {
 		Response res = app.call(env);
 		
 		Assert.assertEquals(res.status(), Status.SUCCESS_OK);
-		Assert.assertEquals("foo", logger.toString());
+		// TODO should pass an TimeSource so we can control the output
+		Assert.assertTrue(StringUtils.contains(logger.toString(), "\"GET /foo HTTP/1.0\" 200 12"));
 	}
 }
