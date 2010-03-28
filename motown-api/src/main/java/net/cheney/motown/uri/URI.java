@@ -3,6 +3,8 @@ package net.cheney.motown.uri;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.cheney.motown.server.api.Path;
+
 public abstract class URI {
 
 	private static final Pattern URI_PATTERN = Pattern.compile("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?");

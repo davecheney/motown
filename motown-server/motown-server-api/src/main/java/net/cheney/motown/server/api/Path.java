@@ -1,4 +1,4 @@
-package net.cheney.motown.uri;
+package net.cheney.motown.server.api;
 
 import java.net.URI;
 import java.util.Arrays;

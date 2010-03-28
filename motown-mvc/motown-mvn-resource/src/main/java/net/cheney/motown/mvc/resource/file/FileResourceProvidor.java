@@ -9,7 +9,7 @@ import net.cheney.motown.mvc.resource.api.Resource;
 import net.cheney.motown.mvc.resource.api.ResourceProvidor;
 import net.cheney.motown.mvc.resource.api.Lock.Scope;
 import net.cheney.motown.mvc.resource.api.Lock.Type;
-import net.cheney.motown.uri.Path;
+import net.cheney.motown.server.api.Path;
 
 public class FileResourceProvidor implements ResourceProvidor {
 

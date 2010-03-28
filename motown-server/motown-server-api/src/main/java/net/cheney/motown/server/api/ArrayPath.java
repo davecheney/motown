@@ -1,7 +1,8 @@
-package net.cheney.motown.uri;
+package net.cheney.motown.server.api;
 
 import java.util.Iterator;
 import java.util.List;
+
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;

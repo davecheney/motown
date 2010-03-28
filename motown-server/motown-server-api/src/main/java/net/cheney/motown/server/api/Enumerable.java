@@ -1,4 +1,4 @@
-package net.cheney.motown.uri;
+package net.cheney.motown.server.api;
 
 public interface Enumerable<T> extends Iterable<T> {
 

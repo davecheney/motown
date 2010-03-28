@@ -17,7 +17,10 @@
   	<dependency>
   		<groupId>net.cheney.snax</groupId>
   		<artifactId>snax-core</artifactId>
-  		<version>0.4.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>commons-io</groupId>
+  		<artifactId>commons-io</artifactId>
   	</dependency>
   </dependencies>
 </project>

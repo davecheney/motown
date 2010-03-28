@@ -5,10 +5,11 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
+import net.cheney.motown.mvc.resource.api.ResourceProvidor;
+import net.cheney.motown.mvc.resource.controller.ResourceController;
+import net.cheney.motown.mvc.resource.file.FileResourceProvidor;
+import net.cheney.motown.mvn.dispatcher.DynamicResourceHandler;
 import net.cheney.motown.mvn.dispatcher.ResourceFactory;
-import net.cheney.motown.mvn.resource.api.ResourceProvidor;
-import net.cheney.motown.mvn.resource.controller.ResourceController;
-import net.cheney.motown.mvn.resource.file.FileResourceProvidor;
 import net.cheney.motown.protocol.http.async.HttpServerProtocolFactory;
 import net.cheney.motown.server.api.Application;
 import net.cheney.rev.protocol.ServerProtocolFactory;
