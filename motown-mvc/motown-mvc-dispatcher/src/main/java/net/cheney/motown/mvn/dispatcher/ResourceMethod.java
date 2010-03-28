@@ -1,4 +1,4 @@
-package net.cheney.motown.server.dispatcher;
+package net.cheney.motown.mvn.dispatcher;
 
 import net.cheney.motown.common.api.Response;
 import net.cheney.motown.server.api.Environment;

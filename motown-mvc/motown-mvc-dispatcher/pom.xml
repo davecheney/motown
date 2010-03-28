@@ -1,18 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>motown</artifactId>
+    <artifactId>motown-mvc</artifactId>
     <groupId>net.cheney.motown</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <groupId>net.cheney.motown</groupId>
-  <artifactId>motown-server</artifactId>
+  <artifactId>motown-mvc-dispatcher</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>motown-server</name>
-  <modules>
-  	<module>motown-server-api</module>
-  	<module>motown-server-router</module>
-  	<module>motown-server-middleware</module>
-  </modules>
 </project>

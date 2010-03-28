@@ -1,4 +1,5 @@
-package net.cheney.motown.server.dispatcher;
+package net.cheney.motown.mvn.dispatcher;
+
 
 public class SingletonResourceFactory extends ResourceFactory {
 

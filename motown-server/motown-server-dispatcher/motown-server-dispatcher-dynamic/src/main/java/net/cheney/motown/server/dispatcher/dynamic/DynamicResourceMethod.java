@@ -6,8 +6,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import net.cheney.motown.common.api.Response;
+import net.cheney.motown.mvn.dispatcher.ResourceMethod;
 import net.cheney.motown.server.api.Environment;
-import net.cheney.motown.server.dispatcher.ResourceMethod;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;

@@ -24,6 +24,7 @@
 		<module>motown-common</module>
 		<module>motown-client</module>
 		<module>motown-server</module>
+		<module>motown-mvc</module>
 	</modules>
 
 	<scm>

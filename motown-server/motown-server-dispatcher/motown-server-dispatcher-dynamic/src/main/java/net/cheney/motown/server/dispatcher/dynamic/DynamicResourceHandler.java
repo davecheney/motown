@@ -7,10 +7,10 @@ import java.util.Map;
 
 import net.cheney.motown.common.api.Response;
 import net.cheney.motown.common.api.Request.Method;
+import net.cheney.motown.mvn.dispatcher.ResourceFactory;
+import net.cheney.motown.mvn.dispatcher.ResourceMethod;
 import net.cheney.motown.server.api.Application;
 import net.cheney.motown.server.api.Environment;
-import net.cheney.motown.server.dispatcher.ResourceFactory;
-import net.cheney.motown.server.dispatcher.ResourceMethod;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
