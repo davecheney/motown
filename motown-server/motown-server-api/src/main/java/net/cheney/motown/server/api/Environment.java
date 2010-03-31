@@ -1,6 +1,6 @@
 package net.cheney.motown.server.api;
 
-import java.net.URI;
+import static net.cheney.motown.server.api.Path.fromUri;
 
 import com.google.common.collect.Multimap;
 
@@ -26,11 +26,6 @@ public abstract class Environment {
 			}
 			
 			@Override
-			public URI uri() {
-				return req.uri();
-			}
-			
-			@Override
 			public HeaderAccessor<Request> header(Header header) {
 				return req.header(header);
 			}
@@ -39,6 +34,11 @@ public abstract class Environment {
 			public Multimap<Header, String> headers() {
 				return req.headers();
 			}
+			
+			@Override
+			public Path pathInfo() {
+				return fromUri(req.uri());
+			}
 		};
 	}
 
@@ -46,11 +46,11 @@ public abstract class Environment {
 
 	public abstract Version version();
 
-	public abstract URI uri();
-
 	public abstract HeaderAccessor<Request> header(Header header);
 
 	public abstract Multimap<Header, String> headers();
+
+	public abstract Path pathInfo();
 	
 }
 
