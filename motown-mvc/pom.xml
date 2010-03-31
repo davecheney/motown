@@ -11,6 +11,5 @@
   <packaging>pom</packaging>
   <modules>
   	<module>motown-mvc-dispatcher</module>
-  	<module>motown-mvn-resource</module>
   </modules>
 </project>
