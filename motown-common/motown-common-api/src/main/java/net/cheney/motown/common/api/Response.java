@@ -2,6 +2,7 @@ package net.cheney.motown.common.api;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -20,6 +21,8 @@ import static net.cheney.motown.common.api.Status.*;
 import static net.cheney.motown.common.api.Version.HTTP_1_1;
 
 public final class Response extends Message {
+	
+	private static final Charset UTF_8 = Charset.forName("UTF-8");
 
 	protected static final FastDateFormat RFC1123_DATE_FORMAT = FastDateFormat.getInstance("EEE, dd MMM yyyy HH:mm:ss zzz", TimeZone.getTimeZone("GMT"), Locale.US);
 	
@@ -120,5 +123,9 @@ public final class Response extends Message {
 	public boolean mayContainBody() {
 		// http://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging-08#section-3.4
 		return (!status().isInformational() && !status().equals(SUCCESS_NO_CONTENT) && !status().equals(REDIRECTION_NOT_MODIFIED));
+	}
+
+	public static Response success(CharSequence seq) {
+		return success(MimeType.TEXT_PLAIN, UTF_8.encode(seq.toString()));
 	}
 }

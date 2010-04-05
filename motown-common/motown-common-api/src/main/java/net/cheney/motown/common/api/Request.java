@@ -66,9 +66,13 @@ public final class Request extends Message {
 	}
 	
 	public Request(RequestLine requestLine) {
-		this(requestLine, ArrayListMultimap.<Header, String>create(), (ByteBuffer) null);	
+		this(requestLine, emptyMultiMap(), (ByteBuffer) null);	
 	}
 	
+	private static Multimap<Header, String> emptyMultiMap() {
+		return ArrayListMultimap.create();
+	}
+
 	public Method method() {
 		return this.requestLine.method();	
 	}
