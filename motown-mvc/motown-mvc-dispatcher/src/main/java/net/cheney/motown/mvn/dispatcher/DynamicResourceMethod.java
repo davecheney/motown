@@ -32,9 +32,6 @@ public class DynamicResourceMethod implements ResourceMethod {
 				if(a.annotationType().equals(PathTranslated.class)) {
 					args[i] = new PathTranslatedParameterInjector();
 				}
-				if(a.annotationType().equals(Fragment.class)) {
-					args[i] = new FragmentParameterInjector();
-				}
 				if(a.annotationType().equals(Depth.class)) {
 					args[i] = new DepthParameterInjector(((Depth)a).value());
 				}
@@ -48,7 +45,7 @@ public class DynamicResourceMethod implements ResourceMethod {
 
 	@Override
 	public Response invoke(Object resource, Environment env) {
-		LOG.info(String.format("%s %s %s %s", env.method(), env.uri(), env.version(), env.headers()));
+		LOG.info(String.format("%s %s %s %s", env.method(), env.pathInfo(), env.version(), env.headers()));
 		Response response = invoke0(resource, env);
 		LOG.info(String.format("%s %s %s %s", response.version(), response.status().code(), response.status().reason(), response.headers()));
 		return response;

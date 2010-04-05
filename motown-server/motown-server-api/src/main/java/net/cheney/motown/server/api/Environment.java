@@ -58,7 +58,7 @@ public abstract class Environment {
 		return params;
 	}
 	
-	public <K> K param(Parameters.Key<K> key) {
+	public <K> K param(Parameter<K> key) {
 		return params.get(key);
 	}
 }

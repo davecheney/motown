@@ -5,23 +5,19 @@ import java.util.Map;
 
 public class Parameters {
 
-	private final Map<Key<?>, Object> entries = new HashMap<Key<?>, Object>();
+	private final Map<Parameter<?>, Object> entries = new HashMap<Parameter<?>, Object>();
 
-	public interface Key<K> { 
-		
-	}
-	
 	@SuppressWarnings("unchecked")
-	public <K> K get(Key<K> key) {
+	public <K> K get(Parameter<K> key) {
 		return (K) entries.get(key);
 	}
 	
-	public <K> K put(Key<K> key, K value) {
+	public <K> K put(Parameter<K> key, K value) {
 		entries.put(key, value);
 		return value;
 	}
 	
-	public Iterable<Key<?>> keys() {
+	public Iterable<Parameter<?>> keys() {
 		return entries.keySet();
 	}
 }

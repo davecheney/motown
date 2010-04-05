@@ -12,8 +12,8 @@ public class Router implements Application {
 	@Override
 	public Response call(Environment env) {
 		Response resp = clientErrorNotFound();
-		for(Router.Route r : routes) {
-			resp = r.call(env);
+		for(Application app : routes) {
+			resp = app.call(env);
 			resp.status().isClientError() ? break : continue;
 		}
 	}
