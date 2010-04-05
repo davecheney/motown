@@ -2,7 +2,7 @@ package net.cheney.motown.server.api;
 
 public class NamedIntegerParameter extends NamedParameter<Integer> {
 
-	protected NamedIntegerParameter(String name) {
+	public NamedIntegerParameter(String name) {
 		super(name, Integer.class);
 	}
 

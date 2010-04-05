@@ -2,7 +2,7 @@ package net.cheney.motown.server.api;
 
 public class NamedStringParameter extends NamedParameter<String> {
 
-	protected NamedStringParameter(String name) {
+	public NamedStringParameter(String name) {
 		super(name, String.class);
 	}
 
