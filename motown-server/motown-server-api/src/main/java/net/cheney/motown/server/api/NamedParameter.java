@@ -1,6 +1,10 @@
 package net.cheney.motown.server.api;
 
-public abstract class NamedParameter<K> implements Parameter<K> {
+public abstract class NamedParameter<K> extends Parameter<K> {
+
+	protected NamedParameter(Class<K> klazz) {
+		super(klazz);
+	}
 
 	public abstract String name();
 	
@@ -8,4 +12,5 @@ public abstract class NamedParameter<K> implements Parameter<K> {
 	public String toString() {
 		return name();
 	}
+
 }
