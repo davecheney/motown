@@ -26,7 +26,7 @@ public enum Header {
 	CONTENT_MD5("Content-MD5", Type.ENTITY),
 	CONTENT_RANGE("Content-Range", Type.ENTITY),
 	CONTENT_TYPE("Content-Type", Type.ENTITY),
-	DATE("Date", Type.GENERAL, java.util.Date.class), 
+	DATE("Date", Type.GENERAL), 
 	DAV("DAV", Type.RESPONSE), 
 	DEPTH("Depth", Type.REQUEST), 
 	DESTINATION("Destination", Type.REQUEST),
@@ -85,16 +85,10 @@ public enum Header {
 	
 	private final String value;
 	private final Header.Type type;
-	final Class<?> klazz;
 	
 	private Header(@Nonnull String name, @Nonnull Header.Type type) {
-		this(name, type, String.class);
-	}
-	
-	private Header(@Nonnull String name, @Nonnull Header.Type type, @Nonnull Class<?> klazz) {
 		this.value = name;
 		this.type = type;
-		this.klazz = klazz;
 	}
 	
 	public static final Header parse(@Nonnull CharSequence c) {
