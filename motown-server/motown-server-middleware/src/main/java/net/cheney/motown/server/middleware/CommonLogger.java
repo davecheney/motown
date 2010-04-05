@@ -11,7 +11,7 @@ import net.cheney.motown.common.api.Response;
 import net.cheney.motown.server.api.Application;
 import net.cheney.motown.server.api.Environment;
 
-public class CommonLogger implements Application {
+public class CommonLogger extends Middleware {
 
 	private final Application app;
 	private final Writer logger;
@@ -22,6 +22,11 @@ public class CommonLogger implements Application {
 	public CommonLogger(Application app, Writer logger) {
 		this.app = app;
 		this.logger = logger;
+	}
+	
+	@Override
+	public CommonLogger bind(Application app) {
+		return new CommonLogger(app, this.logger);
 	}
 	
 	@Override
@@ -40,7 +45,7 @@ public class CommonLogger implements Application {
 				"-", // user
 				DATE_FORMAT.format(finish),
 				env.method(),
-				env.uri(),
+				env.pathInfo(),
 				"", // query string
 				env.version(),
 				response.status().code(),
