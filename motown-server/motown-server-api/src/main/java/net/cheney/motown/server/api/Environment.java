@@ -11,6 +11,8 @@ import net.cheney.motown.common.api.Message.HeaderAccessor;
 import net.cheney.motown.common.api.Request.Method;
 
 public abstract class Environment {
+	
+	private Parameters params = new Parameters();
 
 	public static Environment fromRequest(final Request req) {
 		return new Environment() {
@@ -34,7 +36,7 @@ public abstract class Environment {
 			public Multimap<Header, String> headers() {
 				return req.headers();
 			}
-			
+						
 			@Override
 			public Path pathInfo() {
 				return fromUri(req.uri());
@@ -52,5 +54,12 @@ public abstract class Environment {
 
 	public abstract Path pathInfo();
 	
+	public Parameters params() {
+		return params;
+	}
+	
+	public <K> K param(Parameters.Key<K> key) {
+		return params.get(key);
+	}
 }
 
