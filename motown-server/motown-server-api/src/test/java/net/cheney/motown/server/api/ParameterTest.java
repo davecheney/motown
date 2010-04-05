@@ -6,41 +6,9 @@ import org.junit.Test;
 
 public class ParameterTest {
 
-	Parameter<String> foo = new NamedParameter<String>(String.class) {
+	Parameter<String> foo = new NamedStringParameter("foo");
 
-		@Override
-		public String name() {
-			return "foo";
-		}
-
-		@Override
-		public String decode(String string) {
-			return string;
-		}
-		
-		@Override
-		public String encode(String value) {
-			return value.toString();
-		}
-	};
-
-	NamedParameter<Integer> bar = new NamedParameter<Integer>(Integer.class) {
-
-		@Override
-		public String name() {
-			return "bar";
-		}
-
-		@Override
-		public Integer decode(String string) {
-			return Integer.parseInt(string);
-		}
-		
-		@Override
-		public String encode(Integer value) {
-			return value.toString();
-		}
-	};
+	Parameter<Integer> bar = new NamedIntegerParameter("bar");
 
 	@Test
 	public void testValidDecode() {

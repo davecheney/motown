@@ -2,11 +2,16 @@ package net.cheney.motown.server.api;
 
 public abstract class NamedParameter<K> extends Parameter<K> {
 
-	protected NamedParameter(Class<K> klazz) {
+	private final String name;
+
+	protected NamedParameter(String name,Class<K> klazz) {
 		super(klazz);
+		this.name = name;
 	}
 
-	public abstract String name();
+	public String name() {
+		return name;
+	}
 	
 	@Override
 	public String toString() {
