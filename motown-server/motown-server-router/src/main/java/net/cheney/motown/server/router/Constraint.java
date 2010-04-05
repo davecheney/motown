@@ -4,5 +4,5 @@ import net.cheney.motown.common.api.Request;
 
 public abstract class Constraint {
 
-	public abstract boolean matches(Request request);
+	public abstract boolean matches( request);
 }
